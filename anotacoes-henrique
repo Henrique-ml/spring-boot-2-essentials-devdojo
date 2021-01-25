@@ -57,6 +57,21 @@ Pacotes / Classes e suas responsabilidades
 - Entities: o que se tem no banco de dados
 
 
+// --- 08 --- //
+
+ResponseEntity<>
+- retornar informações extras de uma requisição HTTP. Ex: o status da requisição
+
+.orElseThrow()		[ 5:35 ]
+- na stream, retornar algo caso não encontre o objeto pedido
+- por convenção as pessoas lançam o "Error 404", mas ele não apresenta tantas informções, então fazer um padrão mais explicativo
+- no código utilizar um padrão, ou seja, usou no endpoint o - HttpStatus.BAD_REQUEST - então usar em outros endpoints também
+
+properties.application -> propoerties.yml		[ 8:12 ]
+- esconder o Stack Trace na requisição GET do erro do método finById() caso não seja encontrado um animal com aquele id
+
+
+
 
 
 
