@@ -1,0 +1,62 @@
+@ResponseBody <- @RestController
+- o retorno dos métodos dentro da classe serão apenas Strings
+- imbutido na classe annotation @RestController
+
+
+Jackson 
+- serializador oficial do Spring
+- criar os atributos JSON utilizando os GETTERS/SETTERS (error: 500 caso não tenha os get/set)
+
+
+@Component
+- transformar a classe em Bean (classe escaneável) para que o Spring possa trabalhar com ela
+- @Controller e @Service são (quase) a mesma coisa
+
+@RequiredArgsConstructor
+- criar um Construtor da classe com somente métodos "final"
+
+@Configuration
+- transformar a classe em um Bean
+- vai colocar a classe de configuração no meio do "Filter Chain" (corrente de filtros)
+
+@EnableAutoConfiguration
+- configuração de propriedades, classes a serem executadas, etc
+
+@ComponentScan
+- varrer os pacotes, com as classes, no pacote principal onde essa anotação estiver 
+
+
+Básico do Spring para se inicializar uma aplicação, escanear toda a config e os componentes
+- @EnableAutoConfiguration
+- @ComponentScan		
+- @Configuration
+- ao invés de usar esses 3, usa-se o @SpringBootApplication
+
+// --- 05 --- //
+
+Ao inserir a dependência Spring Boot Devtools
+- Spring habilitará o Hot Swap, e entre outras coisas
+
+Hot Swap 
+- fazer somente o Build de pequenas mudanças feitas no código e não precisar reiniciar a aplicação inteira
+- melhor performance, menos tempo, para rodar a aplicação
+
+// --- 07 --- //
+
+@Data 
+- gerar getters/setters, hashCode e equals, toString, ...
+
+@AllArgsConstructor
+- gerar construtor com todos os atributos
+
+
+Pacotes / Classes e suas responsabilidades
+- Controllers: onde são os endpoints
+- Service: lógica regra de negócios
+- Repositories: a conexão diretamente com o banco de dados (Query's ficarão aqui)
+- Entities: o que se tem no banco de dados
+
+
+
+
+

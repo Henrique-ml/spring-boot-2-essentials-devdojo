@@ -8,21 +8,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import academy.devdojo.springboot2.entities.Animal;
+import academy.devdojo.springboot2.services.AnimalService;
 import academy.devdojo.springboot2.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @RestController
-@RequestMapping("/animal")
+@RequestMapping("/animais")
 @Log4j2
 @RequiredArgsConstructor
 public class AnimalController {
+	
     private final DateUtil dateUtil;
+    private final AnimalService animalService;
 
-    @GetMapping("/list")
+    @GetMapping
     public List<Animal> list(){
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return List.of(new Animal("Bulldog"), new Animal("Pug"));
+        return animalService.listAll();
     }
 
 }
