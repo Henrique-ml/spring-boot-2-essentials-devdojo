@@ -3,9 +3,12 @@ package academy.devdojo.springboot2.controllers;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +36,10 @@ public class AnimalController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<Animal> finById(@PathVariable long id){
         return ResponseEntity.ok(animalService.findById(id));
+    }
+    
+    @PostMapping
+    public ResponseEntity<Animal> save(@RequestBody Animal animal) {
+    	return new ResponseEntity<>(animalService.save(animal), HttpStatus.CREATED);
     }
 }

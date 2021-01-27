@@ -17,20 +17,26 @@ Jackson
 
 @Configuration
 - transformar a classe em um Bean
+- Marca a classe como uma fonte de definições de bean para o contexto do aplicativo
 - vai colocar a classe de configuração no meio do "Filter Chain" (corrente de filtros)
 
 @EnableAutoConfiguration
-- configuração de propriedades, classes a serem executadas, etc
+- configuração de propriedades, classes a serem executadas, etc.
+- Diz ao Spring Boot para começar a adicionar beans com base nas configurações do classpath, outros beans e várias configurações de propriedade...
+- ...Por exemplo, se spring-webmvcestiver no caminho de classe, essa anotação sinaliza o aplicativo como um aplicativo da web
+- ... e ativa os principais comportamentos, como configurar um DispatcherServlet.
 
 @ComponentScan
 - varrer os pacotes, com as classes, no pacote principal onde essa anotação estiver 
-
+- Diz ao Spring para procurar outros componentes, configurações e serviços no com/examplepacote, permitindo que ele encontre os controladores.
 
 Básico do Spring para se inicializar uma aplicação, escanear toda a config e os componentes
 - @EnableAutoConfiguration
 - @ComponentScan		
 - @Configuration
-- ao invés de usar esses 3, usa-se o @SpringBootApplication
+
+@SpringBootApplication
+- é uma anotação de conveniência que adiciona todos os seguintes: @Configuration / @EnableAutoConfiguration / @ComponentScan 
 
 // --- 05 --- //
 
@@ -56,11 +62,11 @@ Pacotes / Classes e suas responsabilidades
 - Repositories: a conexão diretamente com o banco de dados (Query's ficarão aqui)
 - Entities: o que se tem no banco de dados
 
-
-// --- 08 --- //
+// --- 08 --- // - GET
 
 ResponseEntity<>
 - retornar informações extras de uma requisição HTTP. Ex: o status da requisição
+- quando a resposta da requisição retornar direitinho, sem nenhum erro, não terá nenhuma alteração no resultado
 
 .orElseThrow()		[ 5:35 ]
 - na stream, retornar algo caso não encontre o objeto pedido
@@ -70,8 +76,33 @@ ResponseEntity<>
 properties.application -> propoerties.yml		[ 8:12 ]
 - esconder o Stack Trace na requisição GET do erro do método finById() caso não seja encontrado um animal com aquele id
 
+// --- 09 --- // - POST
+
+O padrão de retorno de dados é o que define (Ex: o .orElseThrow acima)
+
+Nesse caso irá se retornar um objeto inteiro
+
+Há muitos lugares onde quando se faz a requisição POST, pode se receber no retorno:
+- ou apenas um ID e um protocolo 201 (CREATED)
+- ou só o protocolo 201 sem nenhum outro tipo de retorno
+- ou o objeto inteiro
 
 
+O método save() precisa de um "body" = ou seja, esse requisição precisa receber um objeto e ser mapeada para salva-la
+- nesse caso usar o Jackson para fazer o mapeamento
+
+Jackson funciona assim: 
+- se ele encontrar o JSON com os atributos da requisição exatamente iguais aos atributos da classe ele fará o mapeamento
+- caso o atributo não esteja como o mesmo nome ele será ignorado, não será mapeado (utilizar o @JsonProperty)
+
+@JsonProperty
+- fará com o que o atributo JSON seja mapeado mesmo sendo diferente do atributo classe 
+- Ex:	
+		@JsonProperty("name") // como será na requisição e ser mapeado para esse atributo da classe
+		private nameCharacter; 
+		
+@ResponseStatus("HttpStatus.CREATED")
+- retornar o protocolo 201 (CREATED)
 
 
 
