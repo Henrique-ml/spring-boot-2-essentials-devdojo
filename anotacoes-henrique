@@ -104,14 +104,25 @@ Jackson funciona assim:
 @ResponseStatus("HttpStatus.CREATED")
 - retornar o protocolo 201 (CREATED)
 
-// --- 10 --- //
-
-Protocolo 204 (NO CONTENT)
-- algo ocorreu certo mas não retorno nenhum conteudo
+// --- 10 --- // - DELETE
 
 Padrão em retornar o BAD_REQUEST permanece
 - animais.remove(findById(id)); // findById() que irá retornar
 
+Protocolo 204 (NO CONTENT)
+- algo ocorreu certo mas não retorno nenhum conteudo
+
 Depotente e Idepontente			[ 5:15 ] 
+
+// --- 11 --- // - PUT
+
+Padrão em retornar o BAD_REQUEST permanece
+
+PUT
+- substituir o estado inteiro do objeto
+- envia o objeto e esse objeto deve substituir completamente o existente
+
+Retorna um NO CONTENT pois você já tem os dados
+
 
 
