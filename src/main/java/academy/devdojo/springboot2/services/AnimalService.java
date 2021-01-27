@@ -37,4 +37,8 @@ public class AnimalService {
 		animais.add(animal);
 		return animal;
 	}
+
+	public void delete(long id) {
+		animais.remove(findById(id));
+	}
 }
