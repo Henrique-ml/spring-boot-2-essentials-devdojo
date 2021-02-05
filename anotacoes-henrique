@@ -124,5 +124,9 @@ PUT
 
 Retorna um NO CONTENT pois você já tem os dados
 
+// --- 12 --- //
+
+Colocar o MySQL nas dependências do pom.xml
+
 
 
