@@ -128,5 +128,46 @@ Retorna um NO CONTENT pois você já tem os dados
 
 Colocar o MySQL nas dependências do pom.xml
 
+// --- 13 --- // 
+
+@Entity
+- transformar a classe em uma tabela
+
+@Id
+- informar ao Spring que é um ID
+
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+- o Id ser auto-incrementável ao salvar no banco de dados
+
+
+
+Configurações para conexão com o banco de daos MySQL:
+
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/animal?useSSL=false&createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
+    username: root
+    password: paraquesenha
+  jpa:
+    show-sql: true 
+    hibernate:
+      ddl-auto: update
+
+
+
+url: jdbc:mysql://localhost:3306/animal?useSSL=false&createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
+- /animal - nome da base de dados (MySQL Workbench)
+- useSSL - relacionado a certificado
+- useTimeZone... - relacionado a problemas com fuso horário 
+
+
+show-sql: true 
+- mostrar Query SQL no Consoloe quando a aplicação rodar
+
+
+ddl-auto: update
+- toda vez que iniciar a aplicação o banco será atualizado
 
 
