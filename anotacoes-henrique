@@ -170,4 +170,36 @@ show-sql: true
 ddl-auto: update
 - toda vez que iniciar a aplicação o banco será atualizado
 
+// --- 14 --- // 
+
+JpaRepository
+- conectado com o banco de dados
+- já vem com métodos, portanto basta só fazer o "extends"
+- ao extendê-lo, automaticamente a classe já é identificada como um Spring bean
+
+Não deve usar as classes que são tabelas no banco de dados (que usam @Entity) como valores de @RequestBody diretamente no Controller 	[ 2:55 ]
+
+Padrão DTO
+- representar essa classe para substitui-la nesse @RequestBody...
+...nesse caso é utilizado uma coisa um pouco diferente de DTO...
+...poderia se criar um sub-classe pra representar essa classe "Animal", mas como terá SÓ esse classe "Animal", não precisa
+
+AnimalPostRequestBody
+- basicamente é uma classe DTO (mas não é exatamente uma)
+- se faz nessa classe exatamente o que se faria se tivesse um DTO ou qualquer outro tipo de padrão
+- o POST não precisa do valor Id, o @Data já cuida disso
+- essa classe facilita refatoração ou até mesmo compartilhar serviços como se fosse um contrato	
+
+@Builder
+- construir um objeto de um jeito diferente
+
+return animalRepository.save(Animal.builder().name(animalPostRequestBody.getName()).build()); 
+- Animal.builder().name(animalPostRequestBody.getName()).build()); // mesma coisa de ----> Animal animal = new Animal(null, animalPostRequestBody.getName());
+- por padrão o "save()" vai salvar o objeto e retornar esse objeto já com um Id que foi auto-incrementado
+
+
+
+
+
+
 
