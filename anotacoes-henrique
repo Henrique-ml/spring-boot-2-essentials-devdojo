@@ -177,7 +177,7 @@ JpaRepository
 - já vem com métodos, portanto basta só fazer o "extends"
 - ao extendê-lo, automaticamente a classe já é identificada como um Spring bean
 
-Não deve usar as classes que são tabelas no banco de dados (que usam @Entity) como valores de @RequestBody diretamente no Controller 	[ 2:55 ]
+!!!!!! Não deve usar as classes que são tabelas no banco de dados (que usam @Entity) como valores de @RequestBody diretamente no Controller !!!!!!	[ 2:55 ]
 
 Padrão DTO
 - representar essa classe para substitui-la nesse @RequestBody...
@@ -197,9 +197,20 @@ return animalRepository.save(Animal.builder().name(animalPostRequestBody.getName
 - Animal.builder().name(animalPostRequestBody.getName()).build()); // mesma coisa de ----> Animal animal = new Animal(null, animalPostRequestBody.getName());
 - por padrão o "save()" vai salvar o objeto e retornar esse objeto já com um Id que foi auto-incrementado
 
+// --- 15 --- //
 
+Essa aula é sobre trocar aqueles métodos de build(), etc, por esse framework Mapstruct para agilizar e ter melhor performance
 
+Pode colocar todos os Mappers dentro de um pacote só      OU     Pode criar vários pacotes separados
+- varia de pessoa pra pessoa
 
+(componentModel = "spring") 	[ 3:52 ]
+- possibilitar fazer injeção de dependência caso seja preciso
 
+classe AnimalMapper 	[ 4:35 ] 
+- os métodos irão fazer automaticamente a conversão de todos os atributos que se tem dentro do objeto da classe DTO para um objeto da classe (associado a uma tabela)...
+... nesse caso a classe DTO "AnimalPost.. e AnimalPut.." para a classe de entidade "Animal"
 
-
+public static final AnimalMapper INSTANCE = Mappers.getMapper(AnimalMapper.class);
+- forma de chamar esse métodos abstratos 
+- ou seja, é uma instancia dessa 

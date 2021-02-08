@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/animal?useSSL=false&createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
     username: root
-    password: paraquesenha
+    password: root
   jpa:
     show-sql: true 
     hibernate:
