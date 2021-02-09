@@ -214,3 +214,21 @@ classe AnimalMapper 	[ 4:35 ]
 public static final AnimalMapper INSTANCE = Mappers.getMapper(AnimalMapper.class);
 - forma de chamar esse métodos abstratos 
 - ou seja, é uma instancia dessa 
+
+// --- 16 --- //
+
+É usado o @RequestParam para não causar ambiguidade, já que o @GetMapping está em dois métodos
+
+@RequestParam
+- usado para inserir valores nos parâmetros do método
+- funciona colocando o sinal "?" depois do caminho da URL e em seguida o parâmetro "name=" e o valor desse parâmetro "Rottweiler"
+Ex: ../find?name=Bulldog
+
+@RequestParam(defaultValue = "")
+- valor padrão caso não seja passado nenhum valor na URL
+
+@RequestParam(required = false)
+- não é mais obrigatório colocar valores valores em atributos, ou seja, pode colocar somente o caminho "/find", por exemplo, sem ter que colocar o "?name=..."
+
+
+

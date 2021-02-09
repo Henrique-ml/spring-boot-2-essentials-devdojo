@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import academy.devdojo.springboot2.entities.Animal;
@@ -40,6 +41,11 @@ public class AnimalController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<Animal> finById(@PathVariable long id){
         return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));
+    }
+    
+    @GetMapping(path = "/find")
+    public ResponseEntity<List<Animal>> finByName(@RequestParam String name){
+    	return ResponseEntity.ok(animalService.findByName(name));
     }
     
     @PostMapping

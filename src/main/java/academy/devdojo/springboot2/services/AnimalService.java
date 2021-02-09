@@ -22,6 +22,10 @@ public class AnimalService {
 	public List<Animal> listAll() {
 		return animalRepository.findAll();
 	}
+	
+	public List<Animal> findByName(String name) {
+		return animalRepository.findByName(name);
+	}
 
 	public Animal findByIdOrThrowBadRequestException(long id) {
 		return animalRepository.findById(id)
