@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 import academy.devdojo.springboot2.entities.Animal;
+import academy.devdojo.springboot2.exceptions.BadRequestException;
 import academy.devdojo.springboot2.mapper.AnimalMapper;
 import academy.devdojo.springboot2.repositories.AnimalRepository;
 import academy.devdojo.springboot2.requests.AnimalPostRequestBody;
@@ -29,7 +31,7 @@ public class AnimalService {
 
 	public Animal findByIdOrThrowBadRequestException(long id) {
 		return animalRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Animal not Found"));
+				.orElseThrow(() -> new BadRequestException("Animal not Found"));
 	}
 
 	public Animal save(AnimalPostRequestBody animalPostRequestBody) {

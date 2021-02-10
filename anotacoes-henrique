@@ -56,11 +56,23 @@ Hot Swap
 - gerar construtor com todos os atributos
 
 
+
+
+
+
+
 Pacotes / Classes e suas responsabilidades
 - Controllers: onde são os endpoints
 - Service: lógica regra de negócios
 - Repositories: a conexão diretamente com o banco de dados (Query's ficarão aqui)
 - Entities: o que se tem no banco de dados
+
+
+
+
+
+
+
 
 // --- 08 --- // - GET
 
@@ -230,5 +242,11 @@ Ex: ../find?name=Bulldog
 @RequestParam(required = false)
 - não é mais obrigatório colocar valores valores em atributos, ou seja, pode colocar somente o caminho "/find", por exemplo, sem ter que colocar o "?name=..."
 
+// --- 17 --- //
+
+O tratamento de exceções é mais uma questão de padrão do projeto
+
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+- retorne sempre o status HTTP - Bad Request (400) 
 
 
