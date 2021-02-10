@@ -249,4 +249,21 @@ O tratamento de exceções é mais uma questão de padrão do projeto
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 - retorne sempre o status HTTP - Bad Request (400) 
 
+// --- 18 --- // 
+
+Handler Global para as exceções do projeto
+
+A parte de consitência é a parte mais importante quando se desenvolve uma aplicação
+
+Fazer com o que possamos manipular o retorno de informações das exceções, ou seja, deixando de um jeito padronizado
+
+Falar para todos os Controllers que quando se tiver uma exceção do tipo BadRequestException (exceção customizada), irá precisar utilizar o método__________...
+
+@ControllerAdvice
+- avisar para todos os Controllers que devem utilizar o que se colocar dentro da classe baseado em como se fosse uma "flag"
+- a flag que será utilizada é a @ExceptionHandler
+
+@ExceptionHandler(BadRequestException.class) 	 [ 3:10 ]
+- caso seja lançado uma exceção desse tipo (BadRequestException) deve-se utilizar o método que essa Annotation se refere (e retornar um valor)...
+... nesse caso o valor que está sendo retornado é um objeto do tipo "ResponseEntity<BadRequestExceptionDetails>" com detalhes do erro
 
