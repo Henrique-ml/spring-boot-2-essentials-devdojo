@@ -3,6 +3,8 @@ package academy.devdojo.springboot2.controllers;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,7 +51,7 @@ public class AnimalController {
     }
     
     @PostMapping
-    public ResponseEntity<Animal> save(@RequestBody AnimalPostRequestBody animalPostRequestBody) {
+    public ResponseEntity<Animal> save(@RequestBody @Valid AnimalPostRequestBody animalPostRequestBody) {
     	return new ResponseEntity<>(animalService.save(animalPostRequestBody), HttpStatus.CREATED);
     }
     

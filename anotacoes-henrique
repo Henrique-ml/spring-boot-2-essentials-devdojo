@@ -282,5 +282,27 @@ Então, se há uma situação que você precisa checar se suas ações, em caso 
 @Transactional(rollbackFor = Exception.class)
 - agora também leva em conta exceções Checked (Exception) e Unchecked (Runtime)
 
+// --- 20 --- //
 
+@Column(nullable = false)
+private String name;
+- isso não atualiza o banco de dados, teria que ser manualmente, então não será utilizado
 
+Será utilizado o pacote do Spring - SpringBoot Starter Validation (antes fazia parte do Spring mas foi separado)
+
+Como não se está utilizando a classe entidade "Animal" direto  nos Controllers, usar os Validations nas classes DTO
+
+@NotEmpty(message = "The animal name cannot be empty")
+private String name;
+- significa que esse atributo ao ser salvo no banco de dados não pode ser vazio nem nulo
+- (foi somente na classe AnimalPostRequestBody)
+
+Existem outras validações de campo que podem ser feitas com esse pacote, por exemplo:
+- @URL
+- @Min / @Max (numero)
+- ...
+
+@Valid
+- dizer para o Spring para fazer estas validações automaticamente
+
+Dessa forma foi possível fazer validações dos campos diretamente no Controller, então nem precisa se preocupar em fazer "if" que o Spring já tomará conta
