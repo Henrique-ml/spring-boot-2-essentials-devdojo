@@ -33,18 +33,18 @@ public class AnimalController {
     private final AnimalService animalService;
 
     @GetMapping
-    public ResponseEntity<List<Animal>> list(){
+    public ResponseEntity<List<Animal>> list() {
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animalService.listAll());
     }
     
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Animal> finById(@PathVariable long id){
+    public ResponseEntity<Animal> finById(@PathVariable long id) {
         return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));
     }
     
     @GetMapping(path = "/find")
-    public ResponseEntity<List<Animal>> finByName(@RequestParam String name){
+    public ResponseEntity<List<Animal>> finByName(@RequestParam String name) {
     	return ResponseEntity.ok(animalService.findByName(name));
     }
     
@@ -54,7 +54,7 @@ public class AnimalController {
     }
     
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id){
+    public ResponseEntity<Void> delete(@PathVariable long id) {
     	animalService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

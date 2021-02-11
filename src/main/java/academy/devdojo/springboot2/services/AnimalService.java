@@ -2,6 +2,8 @@ package academy.devdojo.springboot2.services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import academy.devdojo.springboot2.entities.Animal;
@@ -31,6 +33,7 @@ public class AnimalService {
 				.orElseThrow(() -> new BadRequestException("Animal not Found"));
 	}
 
+	@Transactional
 	public Animal save(AnimalPostRequestBody animalPostRequestBody) {
 		return animalRepository.save(AnimalMapper.INSTANCE.toAnimal(animalPostRequestBody));
 	}

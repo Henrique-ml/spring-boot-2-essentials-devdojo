@@ -267,3 +267,20 @@ Falar para todos os Controllers que quando se tiver uma exceção do tipo BadReq
 - caso seja lançado uma exceção desse tipo (BadRequestException) deve-se utilizar o método que essa Annotation se refere (e retornar um valor)...
 ... nesse caso o valor que está sendo retornado é um objeto do tipo "ResponseEntity<BadRequestExceptionDetails>" com detalhes do erro
 
+// --- 19 --- //
+
+Usar TRANSAÇÕES - depende de como seu banco de dados está estruturado
+
+Caso o engine do seu banco de dados não for "InnoDB", significa que ele não tem suporte para transações
+
+Então, se há uma situação que você precisa checar se suas ações, em caso de exceção, precisaram de um rollback use @Transactional
+
+@Transactional
+- o Spring não vai commitar uma transação enquanto o método não for finalizado (chegar no final)
+- leva em conta somente Exceções tipo Unchecked (Runtime)
+
+@Transactional(rollbackFor = Exception.class)
+- agora também leva em conta exceções Checked (Exception) e Unchecked (Runtime)
+
+
+
