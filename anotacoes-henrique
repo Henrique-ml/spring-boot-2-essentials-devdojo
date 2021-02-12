@@ -373,3 +373,26 @@ Ex: tem 10 dados no banco de dados, caso seja - size=5 - os dados serão dividid
 
 Dessa forma que se faz uma configuração global para sobrescrever a configuração já existente do Spring 
 
+// --- 25 --- //
+
+Por padrão ao adicionar o Pageable, já pode-se utilizar o método/parâmetro [ sort ]
+Ex: localhost:8080/animais?size=20&sort=name,asc
+
+Lembrando que todas as requisições, salvamentos, etc.. estão sendo feitas no nível do banco de dados e não no nível da aplicação
+
+O Hibernate, no console, está imprimindo o log SQL fora do padrão quando é um log Spring
+- isso acontece pois quando se utiliza o [ show-sql: true ] nas configurações...
+... simplesmente será impresso diretamente o SQL no console sem utilizar nenhum tipo de Appender (Spring usa o Logback - log padrão do console)
+
+
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        
+        
+Com essas novas configurações, o SQL agora faz parte do Logback padrão do Spring
+E além deixar mais organizado, melhora a performance ao invés de só imprimir o SQL no console
