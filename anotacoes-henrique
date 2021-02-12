@@ -354,3 +354,22 @@ Paginação
 A Paginação oferece uma grande flexibilidade para quem quer que esteja consumindo sua API...
 ... principalmente se você estiver desenvolvendo aplicações que serão consumidas pelo mobile...
 ... pois você não quer retornar uma lista com 600 nomes, ou até mais, tudo de uma vez kkkkk
+
+// --- 24 --- //
+
+Objetivo da aula é como trocar o padrão do tamanho das Páginas retornadas...
+... ou seja, ao invés fazer isso através da requisição na URL, configurar o retorno das páginas no próprio Spring
+
+Será feito uma pequena adição que vamos criar que afetará o Spring como um todo, ou seja, criar uma nova configuração
+
+Para a configuração ser aplicada globalmente colocar a Annotation @Configuration
+
+pageHandler.setFallbackPageable(PageRequest.of(page, size));
+- page: a página que vai ser exibida por padrão.			
+Ex: tem 3 páginas (0 - 2), caso seja - page=1 - a segunda página será exibida por padrão
+
+- size: a quantidade de dados retornados em uma página		
+Ex: tem 10 dados no banco de dados, caso seja - size=5 - os dados serão divididos em 2 páginas retornando 5 dados em cada página
+
+Dessa forma que se faz uma configuração global para sobrescrever a configuração já existente do Spring 
+
