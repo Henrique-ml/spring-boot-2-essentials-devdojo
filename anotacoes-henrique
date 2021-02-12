@@ -330,3 +330,19 @@ Descobrir qual exceção é lançada quando o objeto, ao tentar salvá-lo (POST)
 - caso tenha mais de um campo/atributo na stream, separá-los por ", "
 
 Dessa forma conseguimos padronizar as exceções para validação de campos
+
+// --- 22 --- //
+
+protected ResponseEntity<Object> handleExceptionInternal(...)
+- método responsável por montar praticamente o corpo de todas as exceções (mensagens de erro) do Spring...
+... onde essas exceções são as classes que são lançadas e que estão inseridas internamente na Annotation @ExceptionHandler
+
+Iremos sobrescrever (@Override) esse método principal com um corpo personalizado, parecido com os que criamos
+
+@Override
+protected ResponseEntity<Object> handleMethodArgumentNotValid(...)
+- como esse método já era tratado pelo Spring, apenas fizemos o @Override dele e um pequeno ajuste
+
+Dessa forma conseguimos tratar ainda mais exceções e obtendo uma padronização ainda maior no projeto
+
+
