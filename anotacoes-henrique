@@ -306,3 +306,27 @@ Existem outras validações de campo que podem ser feitas com esse pacote, por e
 - dizer para o Spring para fazer estas validações automaticamente
 
 Dessa forma foi possível fazer validações dos campos diretamente no Controller, então nem precisa se preocupar em fazer "if" que o Spring já tomará conta
+
+// --- 21 --- //
+
+Fazer com o que a classe "BadRequestExceptionDetails" seja a mesma para praticamente todas as exceções, só especializando conforme necessidade
+
+@SuperBuilder
+- para classes que serão extendidas e que extendem
+
+Criar uma classe que vai trabalhar com os campos adicionais (geradas automaticamente) que se tem quando uma exceção @Valid é lançada...
+... na qual esse @Valid é para conferir o valor dos atributos (se não é empty nem null) quando há o salvamento (POST) de novos objetos no banco de dados
+
+final		[ 3:00 ]
+- pois só há o @Getter e o @SuperBuilder
+
+Handler
+- forma de uma classe fazer o Controller interceptar as exceções e adicionar na exceção o que se definir no método referido...
+... e que nesse caso será lançada uma exceção personalizada (bonitinha) do @Valid que antes era automática (monstruosa)
+
+Descobrir qual exceção é lançada quando o objeto, ao tentar salvá-lo (POST) no banco dados, é empty ou null		[ 3:30 ] 	
+
+...collect(Collectors.joining(", "));
+- caso tenha mais de um campo/atributo na stream, separá-los por ", "
+
+Dessa forma conseguimos padronizar as exceções para validação de campos
