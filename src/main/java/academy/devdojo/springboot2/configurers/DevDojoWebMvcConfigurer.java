@@ -1,4 +1,4 @@
-package academy.devdojo.springboot2.configurer;
+package academy.devdojo.springboot2.configurers;
 
 import java.util.List;
 

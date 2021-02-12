@@ -396,3 +396,29 @@ logging:
         
 Com essas novas configurações, o SQL agora faz parte do Logback padrão do Spring
 E além deixar mais organizado, melhora a performance ao invés de só imprimir o SQL no console
+
+// --- 26 --- //
+
+Quando está se desenvolvendo uma aplicação em algum você precisará fazer uma requisição para um serviço/url externa...
+... então o Spring disponibiliza uma biblioteca que fará essa chamada para o serviço externo, fazendo automaticamente o mapeamento dos dados para sua classe
+
+
+new RestTemplate().getForEntity("http://localhost:8080/animais/2", Animal.class);
+- executando um GET
+- Animal.class: como a requisição irá retornar um JSON, eu falo para o Spring para tentar fazer mapeamento automaticamente usando o próprio Jackson...
+... e esse [ Animal.class ] significa o qual o tipo para fazer esse mapeamento
+- retornará o objeto e mais algumas informações extras que podem ser pertinentes no desenvolvimento do projeto
+
+
+Caso queira pegar somente o objeto em si (body) sem as informações extras, faça:
+- new RestTemplate().getForEntity("http://localhost:8080/animais/2", Animal.class).getBody();
+ou
+- new RestTemplate().getForObject("http://localhost:8080/animais/2", Animal.class);
+
+
+Essas requisições podem ser usadas também com um ou mais placeholders (placeholders são substituidos pelos valores na ordem que são colocados):
+- new RestTemplate().getForEntity("http://localhost:8080/animais/{id}", Animal.class, 2);
+ou
+- new RestTemplate().getForObject("http://localhost:8080/animais/{id}", Animal.class, 2);
+
+

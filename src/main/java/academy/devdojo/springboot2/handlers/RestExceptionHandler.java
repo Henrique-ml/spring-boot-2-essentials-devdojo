@@ -1,4 +1,4 @@
-package academy.devdojo.springboot2.handler;
+package academy.devdojo.springboot2.handlers;
 
 import java.time.LocalDateTime;
 import java.util.List;

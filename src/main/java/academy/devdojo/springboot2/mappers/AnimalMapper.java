@@ -1,4 +1,4 @@
-package academy.devdojo.springboot2.mapper;
+package academy.devdojo.springboot2.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

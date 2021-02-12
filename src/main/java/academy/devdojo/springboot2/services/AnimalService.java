@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import academy.devdojo.springboot2.entities.Animal;
 import academy.devdojo.springboot2.exceptions.BadRequestException;
-import academy.devdojo.springboot2.mapper.AnimalMapper;
+import academy.devdojo.springboot2.mappers.AnimalMapper;
 import academy.devdojo.springboot2.repositories.AnimalRepository;
 import academy.devdojo.springboot2.requests.AnimalPostRequestBody;
 import academy.devdojo.springboot2.requests.AnimalPutRequestBody;

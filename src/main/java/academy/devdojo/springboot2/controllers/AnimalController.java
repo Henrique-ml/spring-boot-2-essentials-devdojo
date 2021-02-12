@@ -23,7 +23,7 @@ import academy.devdojo.springboot2.entities.Animal;
 import academy.devdojo.springboot2.requests.AnimalPostRequestBody;
 import academy.devdojo.springboot2.requests.AnimalPutRequestBody;
 import academy.devdojo.springboot2.services.AnimalService;
-import academy.devdojo.springboot2.util.DateUtil;
+import academy.devdojo.springboot2.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
