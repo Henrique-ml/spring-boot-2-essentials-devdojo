@@ -345,4 +345,12 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(...)
 
 Dessa forma conseguimos tratar ainda mais exceções e obtendo uma padronização ainda maior no projeto
 
+// --- 23 --- //
 
+Paginação
+- uma das coisas mais comuns quando se está trabalhando com qualquer tipo de API...
+... pois você não quer 	retornar todos os dados de uma vez só para seu front-end ou mobile que faz as chamadas para o back-end
+
+A Paginação oferece uma grande flexibilidade para quem quer que esteja consumindo sua API...
+... principalmente se você estiver desenvolvendo aplicações que serão consumidas pelo mobile...
+... pois você não quer retornar uma lista com 600 nomes, ou até mais, tudo de uma vez kkkkk

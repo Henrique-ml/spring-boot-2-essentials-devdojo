@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import academy.devdojo.springboot2.entities.Animal;
@@ -20,8 +22,8 @@ public class AnimalService {
 
 	private final AnimalRepository animalRepository;
 
-	public List<Animal> listAll() {
-		return animalRepository.findAll();
+	public Page<Animal> listAll(Pageable pegeable) {
+		return animalRepository.findAll(pegeable);
 	}
 	
 	public List<Animal> findByName(String name) {

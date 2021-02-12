@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,9 +37,9 @@ public class AnimalController {
     private final AnimalService animalService;
 
     @GetMapping
-    public ResponseEntity<List<Animal>> list() {
+    public ResponseEntity<Page<Animal>> list(Pageable pegeable) {
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return ResponseEntity.ok(animalService.listAll());
+        return ResponseEntity.ok(animalService.listAll(pegeable));
     }
     
     @GetMapping(path = "/{id}")
