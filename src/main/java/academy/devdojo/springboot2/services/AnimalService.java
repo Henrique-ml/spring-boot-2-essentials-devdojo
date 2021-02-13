@@ -26,6 +26,10 @@ public class AnimalService {
 		return animalRepository.findAll(pegeable);
 	}
 	
+	public List<Animal> listAllNonPageable() {
+		return animalRepository.findAll();
+	}
+	
 	public List<Animal> findByName(String name) {
 		return animalRepository.findByName(name);
 	}

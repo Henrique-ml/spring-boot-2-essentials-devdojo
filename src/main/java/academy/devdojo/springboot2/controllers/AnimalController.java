@@ -42,6 +42,12 @@ public class AnimalController {
         return ResponseEntity.ok(animalService.listAll(pegeable));
     }
     
+    @GetMapping(path = "/all")
+    public ResponseEntity<List<Animal>> listAll() {
+    	log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+    	return ResponseEntity.ok(animalService.listAllNonPageable());
+    }
+    
     @GetMapping(path = "/{id}")
     public ResponseEntity<Animal> finById(@PathVariable long id) {
         return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));

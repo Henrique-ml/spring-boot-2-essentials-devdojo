@@ -421,4 +421,30 @@ Essas requisições podem ser usadas também com um ou mais placeholders (placeh
 ou
 - new RestTemplate().getForObject("http://localhost:8080/animais/{id}", Animal.class, 2);
 
+// --- 27 --- //
 
+Não entendi muito bem - criando outro endpoint não paginável		[ 0:20 - 2:10 ]
+- talvez seja para que o retorno dos objetos sejam simples e facilitar a conversão do Array para List ao retornar a List automaticamente
+
+Para fazer o mapeamento automático dos dados de uma coleção, faça:
+- Animal[] animais = new RestTemplate().getForObject("http://localhost:8080/animais/all", Animal[].class);				(objeto "animais" é um array e não uma list)
+
+Não aconselhável converter manualemente esse Array para List pois estaria fazendo um Cast, então pode-se utilizar o Super Type Token
+
+Super Type Token
+- fará essa conversão de Array para List automaticamente
+
+E com o RestTemplate esse Super Type Token se dá através do método "exchange()" (flexibilidade) com o "new ParameterizedTypeReference<>()"	
+
+
+ResponseEntity<List<Animal>> exchange = new RestTemplate().exchange("http://localhost:8080/animais/all",
+				HttpMethod.GET,
+				null,
+				new ParameterizedTypeReference<List<Animal>>() {});
+- null: pois não será enviado nada, é apenas uma requisição GET
+- retornar lista automaticamente
+
+
+Requisições do RestTemplate:
+- array - getForObject()
+- lista - new ParameterizedTypeReference<>()
