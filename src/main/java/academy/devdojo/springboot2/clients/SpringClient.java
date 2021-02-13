@@ -43,6 +43,21 @@ public class SpringClient {
 				new HttpEntity<>(pitbull, createJsonHeader()), 
 				Animal.class);
 		log.info("saved animal {}", pitbullSaved);
+		
+		Animal animalToBeUpdated = pitbullSaved.getBody();
+		animalToBeUpdated.setName("Pitbull 2");
+		ResponseEntity<Void> pitbullUpdated = new RestTemplate().exchange("http://localhost:8080/animais",
+				HttpMethod.PUT,
+				new HttpEntity<>(animalToBeUpdated, createJsonHeader()), 
+				Void.class);
+		log.info(pitbullUpdated);
+		
+		ResponseEntity<Void> pitbullDeleted = new RestTemplate().exchange("http://localhost:8080/animais/{id}",
+				HttpMethod.DELETE,
+				null,
+				Void.class, 
+				animalToBeUpdated.getId());
+		log.info(pitbullDeleted);
 	}
 	
 	private static HttpHeaders createJsonHeader() {

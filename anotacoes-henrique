@@ -471,3 +471,27 @@ ResponseEntity<Animal> pitbullSaved = new RestTemplate().exchange("http://localh
 private static HttpHeaders createJsonHeader() {
 - enviar um header dizendo que o Content-Type é um application Json (informações extras retornadas - Wrapper)
 
+// --- 29 --- //
+
+PUT e DELETE retornam Void em uma requisição
+E os dois são bem parecidos em questão de código
+
+ResponseEntity<Void> pitbullUpdated = new RestTemplate().exchange("http://localhost:8080/animais",
+				HttpMethod.PUT,
+				new HttpEntity<>(animalToBeUpdated, createJsonHeader()), 
+				Void.class);
+- ResponseEntity<Void> e Void.class: pois a requisição PUT retorna Void, ou seja, não retorna nada
+
+
+ResponseEntity<Void> pitbullDelete = new RestTemplate().exchange("http://localhost:8080/animais",
+				HttpMethod.DELETE,
+				null,
+				Void.class, 
+				animalToBeUpdated.getId());
+- null: pois não está enviando nenhuma entidade/objeto/dado (mais ainda sim pode-se colocar os headers - caso seja necessário autenticação)
+- ResponseEntity<Void> e Void.class: pois a requisição DELETE retorna Void, ou seja, não retorna nada
+
+
+ResponseEntity
+- para ter o número do protocólo HTTP referente as requisições feitas e outros dados extras
+
