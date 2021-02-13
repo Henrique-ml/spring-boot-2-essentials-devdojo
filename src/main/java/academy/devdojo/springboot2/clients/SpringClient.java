@@ -4,7 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,5 +32,22 @@ public class SpringClient {
 				null,
 				new ParameterizedTypeReference<List<Animal>>() {});
 		log.info(exchange.getBody());
+		
+		Animal shihtzu = Animal.builder().name("Shih-tzu").build();
+		Animal shihtzuSaved = new RestTemplate().postForObject("http://localhost:8080/animais", shihtzu, Animal.class);
+		log.info("saved animal {}", shihtzuSaved);
+		
+		Animal pitbull = Animal.builder().name("Pitbull").build();
+		ResponseEntity<Animal> pitbullSaved = new RestTemplate().exchange("http://localhost:8080/animais",
+				HttpMethod.POST,
+				new HttpEntity<>(pitbull, createJsonHeader()), 
+				Animal.class);
+		log.info("saved animal {}", pitbullSaved);
+	}
+	
+	private static HttpHeaders createJsonHeader() {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		return httpHeaders;
 	}
 }

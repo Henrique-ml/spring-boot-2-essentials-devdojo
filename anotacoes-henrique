@@ -448,3 +448,26 @@ ResponseEntity<List<Animal>> exchange = new RestTemplate().exchange("http://loca
 Requisições do RestTemplate:
 - array - getForObject()
 - lista - new ParameterizedTypeReference<>()
+
+// --- 28 --- //
+
+POST é praticamente quase a mesma do GET
+
+O método "exchange()" retorna um objeto dentro de um Wrapper (que é o ResponseEntity<> com aquelas infos extras que podem ser pertinentes) 
+
+new RestTemplate().postForObject("http://localhost:8080/animais", shihtzu, Animal.class);
+- shitzu: objeto criado para salvar no banco de dados
+- Animal.class: o tipo que será retornado quando houver esta requisição POST
+
+
+ResponseEntity<Animal> pitbullSaved = new RestTemplate().exchange("http://localhost:8080/animais",
+				HttpMethod.POST,
+				new HttpEntity<>(pitbull), 
+				Animal.class);
+- new HttpEntity<>(pitbull): o objeto que será enviado na requisição POST para salvá-lo no banco de dados
+- Animal.class: o tipo que será retornado quando houver esta requisição POST
+
+
+private static HttpHeaders createJsonHeader() {
+- enviar um header dizendo que o Content-Type é um application Json (informações extras retornadas - Wrapper)
+
