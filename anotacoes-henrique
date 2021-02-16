@@ -495,3 +495,42 @@ ResponseEntity<Void> pitbullDelete = new RestTemplate().exchange("http://localho
 ResponseEntity
 - para ter o número do protocólo HTTP referente as requisições feitas e outros dados extras
 
+// --- 30 --- //
+
+TESTES UNITÁRIOS DEVEM FAZER PARTE DA SUA APLICAÇÃO
+- seja no trabalho
+- entrevista de emprego
+- projetos pessoais
+
+Para os testes utilizaremos o banco de dados em memória H2
+- banco de dados que é criado assim que a aplicação se inicia e destruído assim que ela se encerra
+
+
+@DisplayName("")
+- trocar o nome padrão do teste (o nome da classe) por outro
+
+
+Para rodar os testes não é necessário ter a aplicação SpringBoot rodando
+
+Não está sendo testado o banco de dados em si, mas sim o repositório da aplicação pra ver se está tudo ok...
+... e ver se as Querys estão funcionando da forma que se espera
+(O ideal mesmo seria testar exatamente o banco de dados que se está desenvolvendo a aplicação)
+
+
+@Autowired em caso de testes pode ser utilizado normalmente
+
+
+Há convenções de (7 ou 8 opções) de como normear testes, mas aqui será a modo DevDojo
+- nomear o método (o que será testado_o que esse método deve fazer_quando fazer)
+
+
+Assertions.assertThat(animalSaved).isNotNull();
+- verificar se o objeto não é null
+
+Assertions.assertThat(animalSaved.getId()).isNotNull();
+- verificar se o banco de dados criou corretamento o Id, e ele não é null
+
+Assertions.assertThat(animalSaved.getName()).isEqualTo(animalToBeSaved.getName());
+- verificar se o valor salvo foi igual ao que foi pedido para ser salvo
+
+
