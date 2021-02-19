@@ -3,6 +3,8 @@ package academy.devdojo.springboot2.repositories;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,10 +77,10 @@ class AnimalRepositoryTest {
 		
 		List<Animal> animais = this.animalRepository.findByName(name);
 		
-		Assertions.assertThat(animais).isNotEmpty();
-		
-		Assertions.assertThat(animais).contains(animalSaved);
-	}
+		Assertions.assertThat(animais)
+				.isNotEmpty()
+				.contains(animalSaved);
+	 }
 	
 	@Test
 	@DisplayName("Find By Name returns empty list when no animal is found")
@@ -86,6 +88,19 @@ class AnimalRepositoryTest {
 		List<Animal> animais = this.animalRepository.findByName("Bom de guerra II");
 		
 		Assertions.assertThat(animais).isEmpty();
+	}
+	
+	@Test
+	@DisplayName("Save throw ConstraintViolationException when name is empty")
+	void save_ThrowsConstraintViolationException_WhenNameIsEmpty() {
+		Animal animal = new Animal();
+		
+//		Assertions.assertThatThrownBy(() -> this.animalRepository.save(animal))
+//				.isInstanceOf(ConstraintViolationException.class);
+		
+		Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
+			.isThrownBy(() -> this.animalRepository.save(animal))
+			.withMessageContaining("The animal name cannot be empty");
 	}
 	
 	private Animal createAnimal() {

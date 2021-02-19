@@ -560,3 +560,31 @@ A classe "Assertions" verifica e da um "ok" os dados cumpram/sejam aquilo escrit
 
 Então caso alguém modifique o comportamento dos métodos de repositório, o Assertions avisará
 
+// --- 32 --- //
+
+Assertions.assertThat(animais)
+				.isNotEmpty()
+				.contains(animalSaved);
+- encadeamento de asserções para um código mais conciso
+
+
+@NotEmpty(message = "The animal name cannot be empty")
+private String name;
+- camada extra de segurança
+
+
+Teste de exceção Post:
+- há 2 modos de testar qual exceção é lançada por um método:
+
+1)		[ 2:08 ]
+Assertions.assertThatThrownBy(() -> this.animalRepository.save(animal))
+		.isInstanceOf(ConstraintViolationException.class);
+
+2)		[ 4:25 ]
+Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
+		.isThrownBy(() -> this.animalRepository.save(animal))
+		.withMessageContaining("The animal name cannot be empty");
+		
+
+Ter o diferencial de fazer testes da aplicação para as entrevistas de emprego
+E que tenham testes que cubram casos não explícitos (mais um diferencial)
