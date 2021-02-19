@@ -533,4 +533,30 @@ Assertions.assertThat(animalSaved.getId()).isNotNull();
 Assertions.assertThat(animalSaved.getName()).isEqualTo(animalToBeSaved.getName());
 - verificar se o valor salvo foi igual ao que foi pedido para ser salvo
 
+// --- 31 --- //
+
+Teste de Update:
+void save_UpdatesAnimal_WhenSuccessful() {
+
+
+Teste de Delete:
+void delete_RemovesAnimal_WhenSuccessful() {
+
+
+Teste de FindById:
+void findByName_ReturnsListOfAnimal_WhenSuccessful() {
+
+
+Se quiser fazer diferença na entrevista de emprego trabalhe com casos que não estão explicitamente visíveis
+
+
+Teste de FindByName retorna lista vazia:
+void findByName_ReturnsEmptyList_WhenAnimalIsNotFound() {
+- método criado para garantir que seja retornado uma lista vazia (e não null) quando um objeto procurado não for encontrado
+
+
+A classe "Assertions" verifica e da um "ok" os dados cumpram/sejam aquilo escrito na expressão...
+... ou seja, é aquilo que se espera que aconteça
+
+Então caso alguém modifique o comportamento dos métodos de repositório, o Assertions avisará
 
