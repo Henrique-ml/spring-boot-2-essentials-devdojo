@@ -42,12 +42,12 @@ public class AnimalController {
     }
     
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Animal> finById(@PathVariable long id) {
+    public ResponseEntity<Animal> findById(@PathVariable long id) {
         return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));
     }
     
     @GetMapping(path = "/find")
-    public ResponseEntity<List<Animal>> finByName(@RequestParam String name) {
+    public ResponseEntity<List<Animal>> findByName(@RequestParam String name) {
     	return ResponseEntity.ok(animalService.findByName(name));
     }
     

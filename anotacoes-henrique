@@ -654,3 +654,38 @@ Há 2 soluções:
 - mocka-lo
 - injetar dependência desse objeto na classe "AnimalController"
 - removê-lo 
+
+// --- 34 --- //
+
+Para testes simulando erro (ADCASES), é bom sobrescrever os Mocks (que são feitos no @BeforeEach) no próprio escopo do teste		[ 7:20 ]
+
+
+public class AnimalPostRequestBodyCreator {
+
+	public static AnimalPostRequestBody createAnimalPostRequestBody() {
+			return AnimalPostRequestBody.builder()
+					.name(AnimalCreator.createAnimalToBeSaved().getName())
+					.build();
+
+- criou-se a classe "AnimalPostRequestBodyCreator" e esse método "createAnimalPostRequestBody()" pois são para os testes da classe "AnimalController"...
+... já a classe "AnimalCreator" e seus métodos são para o testes da classe "AnimalRepository"
+
+
+
+public class AnimalPutRequestBodyCreator {
+
+	public static AnimalPutRequestBody createAnimalPutRequestBody() {
+		return AnimalPutRequestBody.builder()
+				.id(AnimalCreator.createValidUpdatedAnimal().getId())
+				.name(AnimalCreator.createValidUpdatedAnimal().getName())
+				.build();
+
+- criou-se a classe "AnimalPutRequestBodyCreator" e esse método "createAnimalPutRequestBody()" somente para preencher o parâmetro...
+... já que quando for executado método "replace" do Mock "animalServiceMock" (no @BeforeEach), o método não fará absolutamente nada...
+... ocasionando sempre, independentemente, no retorno "ResponseEntity<Void>" do método "replace" da classe testada "AnimalController"
+
+
+Testes com resultado esperado: 		-Caso de sucesso
+Testes simulando erro: 				-Adcases
+
+

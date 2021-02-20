@@ -22,7 +22,7 @@ class AnimalRepositoryTest {
 	private AnimalRepository animalRepository;
 	
 	@Test
-	@DisplayName("Save persists animal when Successful")
+	@DisplayName("sve persists animal when Successful")
 	void save_PersistAnimal_WhenSuccessful() {
 		Animal animalToBeSaved = AnimalCreator.createAnimalToBeSaved();
 		
@@ -36,7 +36,7 @@ class AnimalRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("Save updates animal when Successful")
+	@DisplayName("save updates animal when Successful")
 	void save_UpdatesAnimal_WhenSuccessful() {
 		Animal animalToBeSaved = AnimalCreator.createAnimalToBeSaved();
 		
@@ -54,7 +54,7 @@ class AnimalRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("Delete removes animal when Successful")
+	@DisplayName("delete removes animal when Successful")
 	void delete_RemovesAnimal_WhenSuccessful() {
 		Animal animalToBeSaved = AnimalCreator.createAnimalToBeSaved();
 		
@@ -68,7 +68,7 @@ class AnimalRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("Find By Name returns list of animal when Successful")
+	@DisplayName("findByName returns a list of animal when Successful")
 	void findByName_ReturnsListOfAnimal_WhenSuccessful() {
 		Animal animalToBeSaved = AnimalCreator.createAnimalToBeSaved();
 		
@@ -84,7 +84,7 @@ class AnimalRepositoryTest {
 	 }
 	
 	@Test
-	@DisplayName("Find By Name returns empty list when no animal is found")
+	@DisplayName("findByName returns an empty list when no animal is found")
 	void findByName_ReturnsEmptyList_WhenAnimalIsNotFound() {
 		List<Animal> animais = this.animalRepository.findByName("Bom de guerra II");
 		
@@ -92,7 +92,7 @@ class AnimalRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("Save throw ConstraintViolationException when name is empty")
+	@DisplayName("save throw ConstraintViolationException when name is empty")
 	void save_ThrowsConstraintViolationException_WhenNameIsEmpty() {
 		Animal animal = new Animal();
 		
