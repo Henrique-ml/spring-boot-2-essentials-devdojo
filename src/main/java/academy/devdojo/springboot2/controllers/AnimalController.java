@@ -1,6 +1,5 @@
 package academy.devdojo.springboot2.controllers;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -23,28 +22,22 @@ import academy.devdojo.springboot2.entities.Animal;
 import academy.devdojo.springboot2.requests.AnimalPostRequestBody;
 import academy.devdojo.springboot2.requests.AnimalPutRequestBody;
 import academy.devdojo.springboot2.services.AnimalService;
-import academy.devdojo.springboot2.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping("/animais")
-@Log4j2
 @RequiredArgsConstructor
 public class AnimalController {
 	
-    private final DateUtil dateUtil;
     private final AnimalService animalService;
 
     @GetMapping
     public ResponseEntity<Page<Animal>> list(Pageable pegeable) {
-        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animalService.listAll(pegeable));
     }
     
     @GetMapping(path = "/all")
     public ResponseEntity<List<Animal>> listAll() {
-    	log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
     	return ResponseEntity.ok(animalService.listAllNonPageable());
     }
     

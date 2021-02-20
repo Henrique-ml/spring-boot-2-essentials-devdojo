@@ -588,3 +588,69 @@ Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
 
 Ter o diferencial de fazer testes da aplicação para as entrevistas de emprego
 E que tenham testes que cubram casos não explícitos (mais um diferencial)
+
+// --- 33 --- //
+
+Testes Unitários do endpoint (Controller)
+
+@Spring
+- uma das formas de se fazer testes unitários
+- o problema dessa Annotation é que irá inicialzar o contexto do Spring (startar a aplicação)...
+... e caso o banco de dados não estiver rodando, a aplicação irá falhar
+
+Então será usado @ExtendWith
+
+@ExtendWith(SpringExtension.class)
+- quer dizer que queremos utilizar o JUnit com o Spring
+- contexto gerado mais rápido e não é totalmente inicializado
+
+Então para começar a fazer testes unitários no Controller precisa-se implementar 2 Annotations
+- @InjecMocks
+- @Mock
+
+@injectMocks
+- utilizado para quando se quer testar a classe em si
+
+@Mock
+- mockar todos os objeto das classes que estão sendo utilizadas na classe declarada na Annotation @InjectMocks
+- então, para não ter que inicializar em si todas essas classes, fazemos o Mock do comportamento...
+... ou seja, definir o comportamento dessas classes			[ 2:40 ]
+
+Centralizar comportamentos em um pacote "utils"
+
+A classe "AnimalCreator" será responsável por criar todos os objetos que serão utilizados nas classes de teste (Mock)
+Esses objetos são uma simulação como se tivessem sendo retornados pelo "animalService", pois não há o banco de dados...
+... já que estamos apenas TESTANDO a classe "AnimalCOntroller"
+
+
+private Animal createAnimalToBeSaved() {
+- significa que quando chamar esse método sei que é um objeto animal que não tem Id
+
+private Animal createValidAnimal() {
+- significa que quando chamar esse método sei que esse objeto animal tem um Id valido
+
+private Animal createValidUpdatedAnimal() {
+- significa que quando chamar esse método sei que esse objeto animal tem o mesmo Id mas o nome é diferente
+
+
+Para simular o comportamento de um "animalService" foi usado a Annotation @BeforeEach para criar uma lista que contém um objeto dentro dentro de um Page...
+... assim simulando um [ animalService.listAll(pageable); ]
+
+@BeforeEach
+- executa o método sempre antes de todos os outros métodos
+
+BDDMockito.when(animalServiceMock.listAll(ArgumentMatchers.any()))
+			.thenReturn(animalPage);
+- significa que, quando o objeto "animalController" ao executar o método "listAll()" do objeto "animalServiceMock"...
+... será retornado o objeto "animalPage"
+
+
+Assertions.assertThat(animePage.toList().get(0).getName()).isEqualTo(expectedName);
+- para pegar os atributos de um Page, primeiro precisa-se convertê-lo para List
+
+O objeto "dateUtil" da classe "AnimalController" é dado como null na classe de teste "AnimalControllerTest" por não estar Mockado na mesma...
+... assim fazendo com o que a aplicação falhe 
+Há 2 soluções:
+- mocka-lo
+- injetar dependência desse objeto na classe "AnimalController"
+- removê-lo 

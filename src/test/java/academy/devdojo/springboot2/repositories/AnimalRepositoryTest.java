@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import academy.devdojo.springboot2.entities.Animal;
+import academy.devdojo.springboot2.utils.AnimalCreator;
 
 @DataJpaTest
 @DisplayName("Tests for Animal Repository")
@@ -23,7 +24,7 @@ class AnimalRepositoryTest {
 	@Test
 	@DisplayName("Save persists animal when Successful")
 	void save_PersistAnimal_WhenSuccessful() {
-		Animal animalToBeSaved = createAnimal();
+		Animal animalToBeSaved = AnimalCreator.createAnimalToBeSaved();
 		
 		Animal animalSaved = this.animalRepository.save(animalToBeSaved);
 		
@@ -37,7 +38,7 @@ class AnimalRepositoryTest {
 	@Test
 	@DisplayName("Save updates animal when Successful")
 	void save_UpdatesAnimal_WhenSuccessful() {
-		Animal animalToBeSaved = createAnimal();
+		Animal animalToBeSaved = AnimalCreator.createAnimalToBeSaved();
 		
 		Animal animalSaved = this.animalRepository.save(animalToBeSaved);
 		
@@ -55,7 +56,7 @@ class AnimalRepositoryTest {
 	@Test
 	@DisplayName("Delete removes animal when Successful")
 	void delete_RemovesAnimal_WhenSuccessful() {
-		Animal animalToBeSaved = createAnimal();
+		Animal animalToBeSaved = AnimalCreator.createAnimalToBeSaved();
 		
 		Animal animalSaved = this.animalRepository.save(animalToBeSaved);
 		
@@ -69,7 +70,7 @@ class AnimalRepositoryTest {
 	@Test
 	@DisplayName("Find By Name returns list of animal when Successful")
 	void findByName_ReturnsListOfAnimal_WhenSuccessful() {
-		Animal animalToBeSaved = createAnimal();
+		Animal animalToBeSaved = AnimalCreator.createAnimalToBeSaved();
 		
 		Animal animalSaved = this.animalRepository.save(animalToBeSaved);
 		
@@ -102,11 +103,4 @@ class AnimalRepositoryTest {
 			.isThrownBy(() -> this.animalRepository.save(animal))
 			.withMessageContaining("The animal name cannot be empty");
 	}
-	
-	private Animal createAnimal() {
-		return Animal.builder()
-				.name("Caramelo")
-				.build();
-	}
-
 }
