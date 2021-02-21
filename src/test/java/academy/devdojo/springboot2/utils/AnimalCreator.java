@@ -19,6 +19,7 @@ public class AnimalCreator {
 	
 	public static Animal createValidUpdatedAnimal() {
 		return Animal.builder()
+				.id(1L)
 				.name("Caramelo mais caramelado")
 				.build();
 	}

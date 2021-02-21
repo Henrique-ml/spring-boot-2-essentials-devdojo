@@ -44,7 +44,7 @@ class AnimalControllerTest {
 				.thenReturn(List.of(AnimalCreator.createValidAnimal()));
 
 		BDDMockito.when(animalServiceMock.findByIdOrThrowBadRequestException(ArgumentMatchers.anyLong()))
-				.thenReturn((AnimalCreator.createValidAnimal()));
+				.thenReturn(AnimalCreator.createValidAnimal());
 
 		BDDMockito.when(animalServiceMock.findByName(ArgumentMatchers.anyString()))
 				.thenReturn(List.of(AnimalCreator.createValidAnimal()));
@@ -85,7 +85,7 @@ class AnimalControllerTest {
 
 	@Test
 	@DisplayName("findById returns animal when successful")
-	void finById_ReturnsAnimal_WhenSuccessful() {
+	void findById_ReturnsAnimal_WhenSuccessful() {
 		Long expectedId = AnimalCreator.createValidAnimal().getId();
 
 		Animal animal = animalController.findById(1).getBody();
@@ -97,7 +97,7 @@ class AnimalControllerTest {
 
 	@Test
 	@DisplayName("findByName returns a list animal when successful")
-	void finByName_ReturnsListOfAnimal_WhenSuccessful() {
+	void findByName_ReturnsListOfAnimal_WhenSuccessful() {
 		String expectedName = AnimalCreator.createValidAnimal().getName();
 
 		List<Animal> animais = animalController.findByName("Bom de guerra III").getBody();
@@ -109,7 +109,7 @@ class AnimalControllerTest {
 
 	@Test
 	@DisplayName("findByName returns an empty list animal when animal is not found")
-	void finByName_ReturnsEmptyListOfAnimal_WhenAnimalIsNotFound() {
+	void findByName_ReturnsEmptyListOfAnimal_WhenAnimalIsNotFound() {
 		BDDMockito.when(animalServiceMock.findByName(ArgumentMatchers.anyString()))
 				.thenReturn(Collections.emptyList());
 		
@@ -140,7 +140,7 @@ class AnimalControllerTest {
 	}
 	
 	@Test
-	@DisplayName("replace update animal when successful")
+	@DisplayName("replace updates animal when successful")
 	void replace_UpdateAnimal_WhenSuccessful() {
 		Assertions.assertThatCode(() -> animalController.replace(AnimalPutRequestBodyCreator.createAnimalPutRequestBody()))
 				.doesNotThrowAnyException();
