@@ -691,3 +691,50 @@ Testes simulando erro: 				-Adcases
 // --- 35 --- //
 
 Testes Unitários do Service
+
+// --- 36 --- //
+
+Testes de Integração - próximo nível de testes (testes do Controller)
+- são teste onde a aplicação inteira é executada
+- testes como se estivesse no deploy em produção
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+- inicializa e utiliza uma porta aleatória toda vez que os testes dessa classe forem executados...
+... colocando a porta = 0, assim o Tomcat por padrão iniciará em uma porta aleatória
+- para não utilizar a porta padrão 8080, pois talvez alguma outra aplicação já esteja usando essa porta
+
+@LocalServerPort
+private int port;
+- forma de pegar a porta que está sendo utilizada no momento da execução
+
+Porém o objeto "testRestTemplate"
+- por padrão sabe onde está localizado (classe) onde está o localhost e a porta
+
+@AutoConfigureTestDatabase
+- executar os testes dessa classe em um banco de dados em memória
+
+
+
+PROBLEMA: com o teste do método "list()" da classe "AnimalController"
+- "Page" é um objeto que não podemos criar
+
+ResponseEntity<PageImpl<Animal>> exchange = testRestTemplate.exchange("/animais", HttpMethod.GET, null,
+				new ParameterizedTypeReference<PageImpl<Animal>>() {});
+- mesmo que na classe "AnimalController" haja o método "list()" que retorna um objeto tipo "ResponseEntity<Page<Animal>>"...
+... colocou-se o retorno como um objeto "PageImpl<Animal>" pois esse objeto é uma implementação de "Page", já que "Page" é uma interface
+- porém, mesmo com isso tudo, quando o código é executado há o erro de que o objeto "PageImpl" não pode ser criado por não haver um construtor...
+... pois o Jackson não conseguiu fazer a conversão para esse tipo
+
+SOLUÇÃO: criar uma classe "PageableResponse", é um Wrapper para objetos tipo "PageImpl<T>"	 	[ 5:35 ]
+- esta classe faz o Wrapper do que é retornado no objeto acima "PageImpl<Animal>"
+- estende a classe "PageImpl<T>" para fazer o Wrapper
+
+
+
+Animal savedAnimal = animalRepository.save(AnimalCreator.createAnimalToBeSaved());
+- vai salvar o animal no banco de dados em memória (de teste)
+
+Durante estes testes SOMENTE A CLASSE "AnimalControllerIT" foi executada e não a aplicação em si
+Portanto, caso a aplicação em si for executada, as requisições ainda estão sendo feitas na porta 8080 normalmente como antes
+
+
