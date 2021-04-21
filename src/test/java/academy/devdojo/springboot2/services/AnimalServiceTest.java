@@ -124,6 +124,7 @@ class AnimalServiceTest {
 		Assertions.assertThatExceptionOfType(BadRequestException.class)
 				.isThrownBy(() -> animalService.findByIdOrThrowBadRequestException(1))
 				.withMessageContaining("Animal not found");
+;
 	}
 
 	@Test

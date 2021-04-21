@@ -708,7 +708,7 @@ private int port;
 - forma de pegar a porta que está sendo utilizada no momento da execução
 
 Porém o objeto "testRestTemplate"
-- por padrão sabe onde está localizado (classe) onde está o localhost e a porta
+- por padrão sabe onde está localizado (classe) - onde está o localhost e a porta
 
 @AutoConfigureTestDatabase
 - executar os testes dessa classe em um banco de dados em memória
@@ -734,7 +734,37 @@ SOLUÇÃO: criar uma classe "PageableResponse", é um Wrapper para objetos tipo 
 Animal savedAnimal = animalRepository.save(AnimalCreator.createAnimalToBeSaved());
 - vai salvar o animal no banco de dados em memória (de teste)
 
-Durante estes testes SOMENTE A CLASSE "AnimalControllerIT" foi executada e não a aplicação em si
+Obs: Durante estes testes SOMENTE A CLASSE "AnimalControllerIT" foi executada e não a aplicação em si
 Portanto, caso a aplicação em si for executada, as requisições ainda estão sendo feitas na porta 8080 normalmente como antes
+
+// --- 37 --- //
+
+1) Unit Tests
+2) Integration Tests
+3) UI Tests (não considerado para este projeto)
+
+Mesmo que não faça tanta diferente retirar o modo DEBUG se otimiza, em aplicações maiores, o tempo de desenvolvimento 		[ 0:17 - 2:30 ]
+
+Integrando todos os métodos a serem testados, sendo esses testes locais rodando apenas a classe "AnimalControllerIT" 	[ 2:45 ]
+
+É interessante manter um teste de HttpStatus para ter certeza que estamos mantendo o padrão em toda a API		[ 10:30 ]
+
+utilizar o método "exchange" pois o método Http PUT retorna void		[ 16:25 ]
+
+PROBLEMA: @DataJpaTest - deleta e cria um novo banco de dados em memória para cada método, testando-os unicamente...		[ 18:30 ]
+... ou seja, cada método testado terá o banco de dados em memória limpo para fazer os testes sem conflito entre dados de outros métodos
+... Já o @AutoConfigureTestDatabase - não faz isso
+
+SOLUÇÃO: utilizar a Annotation @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+- o Spring irá deletar (drop) no bando de dados em memória e recriar para cada método
+- porém, note que o tempo de execução de tais testes aumenta devido à exclusão e recriação do bd em memória
+
+Obs: agora, todos Testes de Integração de cada método estão sendo executados todos de uma vez, não mais separadamente
+
+Testes de Intregação geramente são mais lentos, por isso que separamos ele para uma classe única pois rodam em tempos diferentes na pipeline
+- não é atraente executar seu Teste de Integração sempre que fizermos alterações no código (testes levando +/- 1 segundo para serem executados...
+... onde em uma empresa podem haver 1500 testes = eternidade)
+
+Assim, com estes Testes de Integração, temos o mais prózimo possível que teríamos se fizessemos o Deploy em produção
 
 

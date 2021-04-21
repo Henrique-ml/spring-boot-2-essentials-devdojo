@@ -36,7 +36,7 @@ public class AnimalService {
 
 	public Animal findByIdOrThrowBadRequestException(long id) {
 		return animalRepository.findById(id)
-				.orElseThrow(() -> new BadRequestException("Animal not Found"));
+				.orElseThrow(() -> new BadRequestException("Animal not found"));
 	}
 
 	@Transactional
