@@ -767,4 +767,37 @@ Testes de Intregação geramente são mais lentos, por isso que separamos ele pa
 
 Assim, com estes Testes de Integração, temos o mais prózimo possível que teríamos se fizessemos o Deploy em produção
 
+// --- 38 --- // 
+
+Objetivo da aula: separar o Profiles, para assim executar os testes em diferentes ciclos do Maven...
+... pois, como os Testes de Integração são mais demorados que os Testes Unitários, não queremos executá-lo a todo momento
+
+Utilizando o Maven para executar os Testes de Integração		[ 1:40 ]
+
+<id>integration-tests</id>
+- é o Profile
+
+Configuração para que os Testes sejam executados		[ 4:00 ]
+
+<include>**/*IT.*</include>
+- executar este arquivo independente do pacote [ ** ], do nome [ * ], e do tipo deste arquivo [ .* ] e que contenha a terminação "IT"...
+... onde, padronizado neste projeto, todos os Testes de Integração terminam com o sufixo "IT"
+
+<include>**/*Test.*</include>
+- dessa forma, os arquivos com o sufixo "Test" são incluídos no Profile "integration-tests", junto com os arquivos de sufixo "IT"...
+... ou seja, os Testes Unitários e os Testes de Integração são testados juntos (caso você queira)
+
+mvn test -Pintegration-tests
+- digitar comando no Terminal
+- -P: profile, no qual corresponde o atributo xml <id>
+
+Estes testes demoram um tempo considerável, sendo elevado caso haja novas implementações no projeto...
+... ou seja, a cada implementação incluida no repositório estes testes devem ser executados...
+... em um projeto grande, dentro de alguns meses, pode levar de 2 a 3 minutos para os testes serem concluídos
+
+A premissa é que ambos tipos de teste devem ser testados em Profiles diferentes
+
+Obs: Nessa aula os Testes de Integração e Testes Unitários foram testados juntos
+
+
 
