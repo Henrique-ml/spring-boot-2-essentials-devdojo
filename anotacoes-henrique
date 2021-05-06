@@ -799,5 +799,95 @@ A premissa é que ambos tipos de teste devem ser testados em Profiles diferentes
 
 Obs: Nessa aula os Testes de Integração e Testes Unitários foram testados juntos
 
+// --- 39 --- //
 
+As primeiras coisas a se fazer ao trabalhar com Spring Security é adicionar as dependências que irão realizar a segurança da aplicação
+
+Só de adicionar o Spring Security adquire uma segurança básica - não a melhor porque os dados serão diferentes toda vez ao reiniciar a aplicação
+Console - "Using generated security password: ..."
+
+Repara-se que, após incluir a dependência do Spring Security, uma senha é gerada. Por causa do CLASSPATH que o Spring faz o Scan...
+... ou seja, lembre-se que o Spring irá utilizar "por debaixo dos panos", diversos tipos de Scanner de classes para carregar as configurações...
+... Então como foi adicionado o Spring Security, existem configurações que foram carregadas na sua aplicação, dando uma segurança padrão à aplicação
+
+Portanto, agora, para realizar requisições HTTP à aplicação (Postman), será necessário utilizar essa senha...
+... E caso fizermos essa requisição sem a senha, o status 401 (Não autorizado/autenticado) será retornado
+
+Assim, para realizar as requisições normalmente, fazemos:
+1) Aba Autthorization -> Basic Auth (Postman)
+2) Username = "user" (gerado por padrão)
+3) Password = senha gerada ao rodar a aplicação (nova geração a cada execução)
+
+
+Agora, iremos começar a costumizar a parte de segurança	- Usuário em memória		[ 3:50 ]
+
+E no Spring precisamos ter um Bean, onde segurança é uma configuração que será carregada e será utilizada em toda a aplicação - Filtros (a forma como o Spring funciona)...
+... Assim, nessa classe, será criado uma configuração que carregará automaticamente por esses filtros		[ 5:10 ]
+- gerar o Spring Bean para a classe com a Annotation @EnableWebSecurity
+
+extends WebSecurityConfigurerAdapter
+- para reconhecer os Beans que trabalharemos
+
+Sobrecarregar 2 métodos "configure"	para configurações de segurança		[ 6:15 ]
+- 1° método: protegendo as requisições HTTP
+- 2° método: adicionando usuários em memória para autenticação
+
+
+
+/ 1° método - protegendo requisições HTTP / 
+
+Proteger tudo - sempre que a aplicação receber uma requisição HTTP, este método com funções serão executadas
+
+Ex: 
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+				.anyRequest()
+				.authenticated()
+				.and()
+				.httpBasic();
+	}
+- ou seja, para todas as requisições HTTP (as URL's do Controller) vão precisar passar por autenticação básica
+
+
+
+/ 2° método - Autenticação com Usuário em memória / 
+
+Usuário em memória - os usuários que ficarão ativos duranto o ciclo de vida da aplicação...
+... e, ao reiniciar a aplicação, senhas serão sempre as mesmas, porém, com codificações diferentes
+
+Um usuário em memória precisa ter um tipo de criptografia para sua senha
+DICA: não fazer uma senha sem números
+
+Note que agora aquele password não está mais sendo gerado automaticamente (no log), pois agora temos configurando o Gerenciador de Autenticação...
+... ou seja, o objeto "AuthenticationManagerBuilder" do método "configure"
+
+Ex: 
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+		log.info("Password encoded {}", passwordEncoder.encode("test"));
+		
+		auth.inMemoryAuthentication()
+				.withUser("rique")
+				.password(passwordEncoder.encode("academy"))
+				.roles("USER", "ADMIN")
+				.and()
+				.withUser("devdojo")
+				.password(passwordEncoder.encode("academy"))
+				.roles("USER");
+	}
+- log.info..: apenas para mostrar no log o funcionamento da senha codificada através do objeto "passwordEncoder"
+- withUser(): o nome do usuário
+- password(): a senha do usuário codificada
+- roles(): as permissões desses usuários
+
+( Postman - ao colocar a senha certa uma vez, ela ficará salva nos cookies, e por isso ao colocar uma senha errada, ela funciona )
+
+Então, o Basic Auth são usuário e senha condificados (Basic64 encode)
+Assim, se fornecermos o Token desse basic Auth, a aplicação poderá ser acessada por qualquer pessoa...
+... e por isso que existe que chamamos de "ciclo de vida de um Token" em que precisamos obrigatóriamente fazer o Token expirar ou uma seção expirar...
+... senão quem ter acesso àquele Token poderá fazer qualquer coisa na aplicação até o desenvolvedor trocar a senha
 
