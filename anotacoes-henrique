@@ -891,3 +891,38 @@ Assim, se fornecermos o Token desse basic Auth, a aplicação poderá ser acessa
 ... e por isso que existe que chamamos de "ciclo de vida de um Token" em que precisamos obrigatóriamente fazer o Token expirar ou uma seção expirar...
 ... senão quem ter acesso àquele Token poderá fazer qualquer coisa na aplicação até o desenvolvedor trocar a senha
 
+
+// --- 40 --- // 
+
+[ 0:30 ]
+Mesmo que estejamos autenticados com login e senha corretos, como não estamos utilizando nenhum tipo de "roll"? o que estpa falhando é a parte de CSRF...
+
+CSRF - Cross-site request forgery: que resumidamente é quando alguém executa uma ação em seu nome 		[ 1:10 ] Assistir!!!
+
+O Spring oferece suporte por padrão ao CSRF que pode ser desabilitado. E após desabilitá-lo, o método HTTP "POST" funciona normalmente - status 201...
+
+Ex:
+
+	csrf().disable()...
+
+
+
+Mas queremos criar um TOKEN por questões de segurança. E para criar um TOKEN ao invés de desabilitar utilizamos alguns métodos:
+
+Ex: 
+	
+	csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()...
+- withHttpOnlyFalse(): o utilizamos pois quando se manda um cookie que se coloca essa flag "HttpOnly" com o valor "true", as aplicações front-end em JavaScript / React / Angular...
+... não consiguirão pegar o valor desse cookie. E quando estão fazendo uma requisição POST eles também precisam passar esse cookie quando o CSRF está desabilitado
+
+
+Utilizar o método HTTP "GET" para recuperar o valor do Token gerado para utilizarmos os métodos HTTP "PORT" normalmente 	[ 4:20 ]
+
+Os métodos HTTP "GET" por padrão não têm o status do servidor assim não precisando do CSRF Token
+
+Postman - quando a aplicação é exectuada, um novo CSRF Token é gerado. E para automatizar a obtenção desse CSRF Token, fazemos		[ 5:35 ]
+
+[ 8:19 ]
+E para facilitar a vida e o curso ter o intuito de deixar as coisas mais simples, simplesmente desabilitaremos o CSRF...
+... mas caso estivermos desenvolvendo uma aplicação em produção, deve-se lembrar de utilizar o CSFR Token
+
