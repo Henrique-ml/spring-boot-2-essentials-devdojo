@@ -964,3 +964,44 @@ Após declarar o @EnableGlobalMethodSecurity é gerada uma senha automatica no l
 
 Dessa forma, para exececutarmos o método HTTP "POST" de salvamento, precisa-se estar autenticado e ter a 'role' necessária deste endpoint
 
+// --- 42 --- //
+
+Nessa aula será abordado como recuperar o usuário que está autenticado em requisições da API
+
+""Duplicando"" um método para não ter que ajustar todos os testes por causa de um novo parâmetro		[ 0:30 ]
+
+@AuthenticationPrincipal
+- Annotation utilizada no parâmetro do endpoint que recupera os dados do usuário autenticado que está consumindo a API
+
+E para fazer essa recuperação de dados, faz-se:
+
+ Ex:
+ 
+ 	public ResponseEntity<Animal> findByIdAuthenticationPrincipal(@PathVariable long id, 
+    															  @AuthenticationPrincipal UserDetails userDetails) {
+
+[ 2:10 ]
+Atributo "password" é "null" para não ser tão fácil assim de se conseguir a senha		
+Podemos adicionar mais dados no objeto de "UserDetails"		[ 3:00 ]
+
+[ 3:15 ] Assistir em diante!!!
+
+Para utilizar uma página de login padrão do próprio Spring:
+
+Ex: 
+
+	.formLogin()
+	.and()
+
+
+O Spring tem vários filtros (classes):
+- BasicAuthenticationFilter: verificar se você tem uma autenticação do tipo Basic64 encoder
+- UsernamePasswordAuthenticationFilter: verificar se na requisição há o "user" e a "password"
+- DefaultLoginPageGeneratingFilter: página que gera o login
+- DefaultLogoutPageGeneratingFilter: página que gera o logout
+- FilterSecurityInterceptor: verifica se você está autorizado
+
+Lembrando, há 2 processos quanto a segurança, Authentication ---> Authorization
+- Authentication: login - user e password
+- Authorization: permissão - 'roles'
+

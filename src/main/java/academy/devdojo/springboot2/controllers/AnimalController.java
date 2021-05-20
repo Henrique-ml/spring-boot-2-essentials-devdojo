@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,45 +31,51 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/animais")
 @RequiredArgsConstructor
 public class AnimalController {
-	
-    private final AnimalService animalService;
 
-    @GetMapping
-    public ResponseEntity<Page<Animal>> list(Pageable pegeable) {
-        return ResponseEntity.ok(animalService.listAll(pegeable));
+	private final AnimalService animalService;
+
+	@GetMapping
+	public ResponseEntity<Page<Animal>> list(Pageable pegeable) {
+		return ResponseEntity.ok(animalService.listAll(pegeable));
+	}
+
+	@GetMapping(path = "/all")
+	public ResponseEntity<List<Animal>> listAll() {
+		return ResponseEntity.ok(animalService.listAllNonPageable());
+	}
+
+	@GetMapping(path = "/{id}")
+	public ResponseEntity<Animal> findById(@PathVariable long id) {
+		return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));
+	}
+
+	@GetMapping(path = "by-id/{id}")
+    public ResponseEntity<Animal> findByIdAuthenticationPrincipal(@PathVariable long id, 
+    																@AuthenticationPrincipal UserDetails userDetails) {
+    	return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));
     }
-    
-    @GetMapping(path = "/all")
-    public ResponseEntity<List<Animal>> listAll() {
-    	return ResponseEntity.ok(animalService.listAllNonPageable());
-    }
-    
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<Animal> findById(@PathVariable long id) {
-        return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));
-    }
-    
-    @GetMapping(path = "/find")
-    public ResponseEntity<List<Animal>> findByName(@RequestParam String name) {
-    	return ResponseEntity.ok(animalService.findByName(name));
-    }
-    
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Animal> save(@RequestBody @Valid AnimalPostRequestBody animalPostRequestBody) {
-    	return new ResponseEntity<>(animalService.save(animalPostRequestBody), HttpStatus.CREATED);
-    }
-    
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
-    	animalService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    
-    @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody AnimalPutRequestBody animalPutRequestBody){
-    	animalService.replace(animalPutRequestBody);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    
+
+	@GetMapping(path = "/find")
+	public ResponseEntity<List<Animal>> findByName(@RequestParam String name) {
+		return ResponseEntity.ok(animalService.findByName(name));
+	}
+
+	@PostMapping
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Animal> save(@RequestBody @Valid AnimalPostRequestBody animalPostRequestBody) {
+		return new ResponseEntity<>(animalService.save(animalPostRequestBody), HttpStatus.CREATED);
+	}
+
+	@DeleteMapping(path = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable long id) {
+		animalService.delete(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@PutMapping
+	public ResponseEntity<Void> replace(@RequestBody AnimalPutRequestBody animalPutRequestBody) {
+		animalService.replace(animalPutRequestBody);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
 }
