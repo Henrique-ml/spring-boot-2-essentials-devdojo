@@ -895,7 +895,7 @@ Assim, se fornecermos o Token desse basic Auth, a aplicação poderá ser acessa
 // --- 40 --- // 
 
 [ 0:30 ]
-Mesmo que estejamos autenticados com login e senha corretos, como não estamos utilizando nenhum tipo de "roll"? o que estpa falhando é a parte de CSRF...
+Mesmo que estejamos autenticados com login e senha corretos, como não estamos utilizando nenhum tipo de 'Role' o que estpa falhando é a parte de CSRF...
 
 CSRF - Cross-site request forgery: que resumidamente é quando alguém executa uma ação em seu nome 		[ 1:10 ] Assistir!!!
 
@@ -925,4 +925,42 @@ Postman - quando a aplicação é exectuada, um novo CSRF Token é gerado. E par
 [ 8:19 ]
 E para facilitar a vida e o curso ter o intuito de deixar as coisas mais simples, simplesmente desabilitaremos o CSRF...
 ... mas caso estivermos desenvolvendo uma aplicação em produção, deve-se lembrar de utilizar o CSFR Token
+
+Postman - desabilitando o CSFR Token, toda a automatização édeixada de lado, sendo necessário apenas a "Basic Auth" para interação com a API (aplicação)
+
+// --- 41 --- //
+
+@PreAuthorize
+- utilizado em endpoints para autorizar apenas usuários que tiverem 'roles' específicas/necessárias determinadas nesses endpoints...
+... ou seja, para um usuário salvar um novo animal, por exemplo, ele terá de ter a 'role' "ADMIN"
+
+Neste momento, a aplicação apenas com a autorização básica de "usuário" e "senha" o usuário consegue consumir a API...
+... porém, agora, utilizaremos o "PreAuthorize" para o POST, sendo apenas o usuário com a 'role' "ADMIN" podendo utilizar o método HTTP "POST" (salvar)
+
+Ex: 
+
+	@PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Animal> save(@RequestBody @Valid AnimalPostRequestBody animalPostRequestBody) {
+    	return new ResponseEntity<>(animalService.save(animalPostRequestBody), HttpStatus.CREATED);
+    }
+- apenas usuários com a 'role' "ADMIN" poderão consumir a API...
+... na qual essa 'role' é determinada no método "configure(AuthenticationManagerBuilder" na classe "SecurityConfig"
+
+Porém, ainda falta declarar ao Spring para habilitar as Annotations que são para pré e POST com a Annotation @EnableGlobalMethodSecurity		[ 1:40 ]
+
+Obs: Há a Annotaion "@PostAuthorize", mas que não foi utilizado..
+
+Ex: 
+
+	@EnableGlobalMethodSecurity(prePostEnabled = true)
+	public class SecurityConfig extends WebSecurityConfigurerAdapter {
+- prePostEnabled: por padrão é "false"
+
+
+[ 2:50 ]
+Após declarar o @EnableGlobalMethodSecurity é gerada uma senha automatica no log - porém não há preocupação pois...
+... sobrescrevemos o método  "configure(AuthenticationManagerBuilder" na classe "SecurityConfig", assim não tendo nenhum efeito
+
+Dessa forma, para exececutarmos o método HTTP "POST" de salvamento, precisa-se estar autenticado e ter a 'role' necessária deste endpoint
 
