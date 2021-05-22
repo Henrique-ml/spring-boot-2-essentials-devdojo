@@ -50,6 +50,7 @@ public class AnimalController {
 	}
 
 	@GetMapping(path = "by-id/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Animal> findByIdAuthenticationPrincipal(@PathVariable long id, 
     																@AuthenticationPrincipal UserDetails userDetails) {
     	return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));

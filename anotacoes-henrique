@@ -1005,3 +1005,112 @@ Lembrando, há 2 processos quanto a segurança, Authentication ---> Authorizatio
 - Authentication: login - user e password
 - Authorization: permissão - 'roles'
 
+// --- 43 --- //
+
+Nessa aula será abordada a questão de usuário e sua autenticação no banco de dados, assim como em memória
+
+Criar uma classe que represente o usuário na classe "entities"
+- o nome da classe não é simplesmente "User" pois há alguns banco de dados que dão xabu quando se tenta criar uma tabela com esse nome...
+... mas consideramos essa classe como uma classe geral para Usuários
+
+Para manter as coisas simples para o projeto, não será utilizado a Annotation do JPA - Hibernate @Table 
+
+Utilizar um funcionamento do Spring para garantir que esse objeto "DevDojoUser" fará parte da @AuthenticationPrincipal...
+... no objeto "userDetails" na classe de Controller que é implementar a interface "UserDetails"
+- por causa da regra de Polimorfismo, poderemos utilizar o @AutheticationPrincipal para recuperar o valor definirmos no objeeto classe "DevDojoUser" 
+
+Os métodos implemetados poderiam receber o valor "true" do banco de dados, mas estamos inserindo-o diretamente
+- esses métodos retornando "true" teremos certeza absoluta que pelo menos a conta funcionará sem nenhum outro problema caso o usuário esteja correto
+
+A parte de Authorities depende como você está desenvolvendo seu sistema, o seu Desing de sistema
+- mas nesse caso colocaremos essas Authorities separadas por "," - método da "getAuthorities"... // ROLE_ADMIN, ROLE_USER
+...  mas poderíamos fazer isso por uma coluna, uma abela, até mesmo um banco separado só pra colocar a parte de Authorities
+
+No método "getAuthorities":
+
+Ex: 
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Arrays.stream(authorities.split(","))
+				.map(SimpleGrantedAuthority::new)
+				.collect(Collectors.toList());
+	}
+- transformando o Array de 'roles', ou seja, as Authorities, para novos objetos de tipo "SimpleGrantedAuthority"
+
+
+[ 4:27 ]
+Na parte de configuração do método "configure(AuthenticationManagerBuilder... na classe "SecurityConfig"":
+
+Ex: 
+
+	auth.userDetailsService()..
+	
+- objetos "UserDetailsService" está por toda a parte de segurança do Spring...
+... então, através do Polimorfismo, o Spring saberá chamar o método "findByUsername"
+
+
+
+Então, para autenticarmos algo no método "userDetatilsService" acima, precisamos criar algo que o sistema irá reconhecer...
+... ou seja, criar uma classe que implemente a interface "UserDetailsService" provendo a implementação do método "loadUserByUsername"
+
+[ 5:40 ]
+Criar uma interface Repository "DevDojoUserRepository", referente a classe de usuário, recuperando os dados para autenticação do banco de dados
+- se tivesse um email ou algo do tipo era somente implementar esse método na classe 
+
+[ 6:30 ]
+Criar uma classe Service "DevDojoUserDetailsService", para a autenticação no método "configure(AuthenticationManagerBuilder..." da classe "SecurityConfig"
+- assim que esse método "configure" for executado, chamando esse objeto de tipo "DevDojoUserDetailsService"...
+... o método implementado sobrescrito "loadUserByUsername" será executado recuperando o usuário  no banco de dados...
+
+Agora, depois de criado as classes (e interface) necessárias, como "DevDojoUser", "DevDojoUserRepository" e "DevDojoUserDetailsService", iremos autenticar...
+... método "configure(AuthenticationManagerBuilder..." da classe "SecurityConfig"
+
+Ex: 
+
+	auth.userDetailsService(devDojoUserDetailsService).passwordEncoder(passwordEncoder);
+	
+- passwordEncoder(passwordEncoder): como estamos buscando o "loadByUsername", a autenticação precisa comparar a senha, na qual está codificada...
+... e dessa forma estamos dizendo ao Spring como essa senha foi codificada (com o objeta da classe codificadora), sendo codificada no padrão "bcrypt"
+
+
+
+[ 10:25 ]
+Notar que precisamos criar os usuários no banco de dados
+- para redigir a senha no banco de dados, precisamos primeiro encriptografá-la = pegamos a senha codificada no log também incluindo a string "{bcrypt}":
+
+Ex: 
+	
+	PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	log.info("Password encoded {}", passwordEncoder.encode("academy"));
+	
+	
+
+[ 13:46 ]
+A parte de configuração do Spring suporta multipla autenticação com diferentes tipos do que chamamos de 'providers'...
+... pois imagine caso precisemos autenticar usuários de outros bancos de dados.
+E como exemplo para essa multipla autenticação, também iremos inserir outros usuários, só que em memória
+
+Ex: 
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+		log.info("Password encoded {}", passwordEncoder.encode("academy"));
+		
+		// autenticação de usuário em memória
+		auth.inMemoryAuthentication()
+				.withUser("rique2")
+				.password(passwordEncoder.encode("academy"))
+				.roles("USER", "ADMIN")
+				.and()
+				.withUser("devdojo2")
+				.password(passwordEncoder.encode("academy"))
+				.roles("USER");
+		
+		// autenticação de usuário no banco de dados
+		auth.userDetailsService(devDojoUserDetailsService).passwordEncoder(passwordEncoder);
+	}
+- 2 pontos de entrada de usuários: 1) em memória através do "inMemoryAuthentication()" e 2) no banco de dados através do "devDojoUserDetailsService"
+- o Spring faz essa autenticação na ordem, primeiro verifica se existe o usuário em memória, caso não exista, parte para busca no banco de dados, e se não achar - status 401
+
