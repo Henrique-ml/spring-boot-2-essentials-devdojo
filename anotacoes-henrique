@@ -1147,3 +1147,136 @@ Ex:
 - a 'antmatcher' que tiver a 'role' mais restritiva deve vir primeiro e mais abrangente depois, pois, senão, a 'role' "USER" seria aplicada na 'role' "ADMIN"...
 ... já que a epressão "/**" cobriria o "/admin"
 - .anyRequest().authenticated(): será mantido para, caso tenhamos outra URL que não está na parte de "/animais", o usuário ainda precise pelo menos estar autenticado
+
+// --- 45 --- //
+
+Nesta aula, iremos ajustar os Testes de Integração falhos devido a implementação do Spring Security nos endpoints...
+... já que anteriormente os testes eram feitos sem a parte de segurança.
+
+Apenas os Testes de Integração estão dando erro pois é executado o mais próximo possível de um ambiente de produção, como se fosse um chamada externa, via "RestTemplate"...
+... mas os Testes Unitários das outras classes que não são Testes de Integração continuam funcionando pois são dados "mockados"
+
+Existem diversas formas que podemos fazer para aplicar segurança em toda a suite de testes, mas o abordado nessa aula será o mais fácil e de maior flexibilidade (de acordo com o DevDojo)
+
+
+O objeto dependência "testRestTemplate" da classe "AnimalControllerIT" não está configurado para utilizar segurança...
+... portanto, precisamos criar um Bean onde será utilizado no momento do @Autowired deste objeto.
+Para isso, criaremos uma classe dentro da própria classe "AnimalControllerIT" com um método...
+... um método que criará um objeto  um usuário para autenticação do tipo "TestRestTemplate" para a realização das requisições nos testes:
+
+Ex:
+	
+	@Autowired
+	@Qualifier(value = "testRestTemplateRoleUser")
+	private TestRestTemplate testRestTemplate;
+	
+	...
+	
+	@TestConfiguration
+	static class Config {
+		
+		@Bean(name = "testRestTemplateRoleUser")
+		public TestRestTemplate testRestTemplateRoleUserCreator() {
+		
+			RestTemplateBuilder restTemplateBuilder	= new RestTemplateBuilder().basicAuthentication("rique", "academy");
+			
+			return new TestRestTemplate(restTemplateBuilder);
+		}
+	}
+	
+- static: está na documentação do Spring, e sem ele dará erro no processo
+- @TestConfiguration: configuração que iremos setar para a suite de testes
+- basicAuthentication("rique", "academy"): autenticando um usuário como se fosse no Postman - configurado na classe "SecurityConfig"
+- @Bean(name = "testRestTemplateRoleUser"): criando e nomeando um novo Bean para o objeto "testRestTemplate"...
+... não utilizar um objeto do tipo "TestRestTemplate" padrão, e sim o criado no método "testRestTemplateRoleUserCreator()"
+- @Qualifier(value = "testRestTemplateRoleUser"): o Bean da injeção de dependência (@Autowired) será o Bean que criamos, ou seja, o Bean com o nome "testRestTemplateRoleUser"
+
+
+[ 5:35 ]
+Ao tentar executar os Testes de Integração, pode-se notar que no log há o aviso de "URI is not absolute"...		
+... ou seja, não temos mais acesso ao URI deste servidor (RANDOM_PORT).
+E para solucionarmos este problema fazemos:
+
+Ex:
+
+//	@LocalServerPort
+//	private int port;
+	
+	...
+	
+	@TestConfiguration
+	@Lazy
+	static class Config {
+		
+		@Bean(name = "testRestTemplateRoleUser")
+		public TestRestTemplate testRestTemplateRoleUserCreator(@Value("${local.server.port}") int port) {
+			
+			RestTemplateBuilder restTemplateBuilder	= new RestTemplateBuilder() 
+					.rootUri("http://localhost:" + port)
+					.basicAuthentication("devdojo", "academy");
+			
+			return new TestRestTemplate(restTemplateBuilder);
+			
+		@Bean(name = "testRestTemplateRoleAdmin")
+		public TestRestTemplate testRestTemplateRoleAdminCreator(@Value("${local.server.port}") int port) {
+			
+			RestTemplateBuilder restTemplateBuilder	= new RestTemplateBuilder() 
+					.rootUri("http://localhost:" + port)
+					.basicAuthentication("rique", "academy");
+			
+			return new TestRestTemplate(restTemplateBuilder);
+		}
+	}
+
+- não temos acesso a Porta, ao objeto "port", por não ser um objeto estático, e não podemos inseri-lo dentro do método "rootUri()"...
+- @Lazy: ... então precisamos que nossa classe estática "Config" seja inicializada depois da nossa configuração de Porta. E é por isso que utilizamos essa Annotation
+- @Value("${local.server.port}") int port: para substituirmos aquele objeto "port" e podermos utilizar dentro de nosso método "testRestTemplateRoleUserCreator()" e definirmos a URI
+- (poderiamos ter apenas um BasicAuthentication, e configurando-o nos próprios Testes de Integração (nos métodos) - mas da forma que estamos fazendo é mais simples)
+
+[ 7:25 ] Assistir!!!
+Status HTTP 401 porque não temos um usuário. Nós estamos passando um usuário para autenticar, mas não temos nenhum usuário salvo no banco de dados em memória para a autenticação...
+... portanto, necessitamos criar e salvar um usuário mockado no bd em memória (compatível com os usuários reais cadastrados no banco de dados real e em memória - "SecurityConfig") para a autenticação nos Testes de Integração:
+
+Ex:
+
+	@Autowired
+	private DevDojoUserRepository devDojoUserRepository;
+	
+	private static final DevDojoUser USER = DevDojoUser.builder()
+			.name("DevDojo Academy")
+			.password("{bcrypt}$2a$10$ROeCah/PSiaYJbWi4SQhoe33aH4CRL6smkW3Bp4fxbyecSgyVgviG")
+			.username("devdojo")
+			.authorities("ROLE_USER")
+			.build();
+	
+	private static final DevDojoUser ADMIN = DevDojoUser.builder()
+			.name("Henrique Lira")
+			.password("{bcrypt}$2a$10$ROeCah/PSiaYJbWi4SQhoe33aH4CRL6smkW3Bp4fxbyecSgyVgviG")
+			.username("rique")
+			.authorities("ROLE_USER,ROLE_ADMIN")
+			.build();
+
+- váriaveis de objetos a serem adicionados no bd H2 para cada caso dos Tests de Integração (dos métodos, já que o bd em memória é recriado em cada um)
+
+Adicionando os usuários no banco de dados em memória em todos os métodos 		[ 11:20 ]
+
+
+Dessa forma, é adicionado no bd em memória os usuários para autenticação, e consumindo a API para testes com objetos de tipo "TestRestTemplate" com 'roles' específicas
+
+Ex - Adicionar usuários no banco de dados em memória h2: 
+
+	devDojoUserRepository.save(ADMIN);
+	devDojoUserRepository.save(USER);
+
+
+Ex - Consumir a API: 
+
+	testRestTemplateRoleUser..
+	testRestTemplateRoleAdmin..
+	
+[ 17:20 ]
+Resumo //  
+1) Criamos dois usuários que são criados e adicionados no banco de dados de memória H2 em todos os Testes de Integração (testes particulares de cada método)
+2) Criamos duas configurações para o RestTemplate, que, nesse caso, são objetos para teste, então são do tipo "TestRestTemplate"...
+... utilizando usuários diferentes com suas diferentes 'roles' definidas ao adicioná-los ao banco em memória
+
