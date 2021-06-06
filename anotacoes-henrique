@@ -1280,3 +1280,58 @@ Resumo //
 2) Criamos duas configurações para o RestTemplate, que, nesse caso, são objetos para teste, então são do tipo "TestRestTemplate"...
 ... utilizando usuários diferentes com suas diferentes 'roles' definidas ao adicioná-los ao banco em memória
 
+// --- 46 --- // 
+
+***   Não será feita a parte de descrição textual de como a aplicação funciona e como está arquiteturada 	   	***
+ **   Mas, deixaremos os endpoints disponíveis e os usuários saberão como o objeto precisa ser passado e etc 	**
+ 
+Aula sobre a Documentação da API com o SpringDoc com OpenAPI.
+
+OpenAPI: Traduzido do inglês-A OpenAPI Specification, originalmente conhecida como Swagger Specification...
+... é uma especificação para arquivos de interface legíveis por máquina para descrever, produzir, consumir e visualizar serviços da Web
+
+A Documentação é um tópico extremamente importante quando se desenvolve uma API, pois é como seu front-end / outros usuários saberão como consumir sua API
+
+##  https://springdoc.org/  ##
+
+Adicionando a dependência:
+
+	<dependency>
+		<groupId>org.springdoc</groupId>
+      	<artifactId>springdoc-openapi-ui</artifactId>
+     	<version>1.5.9</version>
+	</dependency>
+
+
+E ao adicioná-la, teremos acesso ao:
+
+	# swagger-ui custom path
+	springdoc.swagger-ui.path=/swagger-ui.html
+	
+- caminho na URL que oferece os nossos endpoints e o que precisamos passar para executar as requisições
+
+
+Então, ao entrarmos na URL "localhost:8080/swagger-ui.html" e fazer o login percebemos uma Interface para o entendimento dos endpoints e sua utilização
+
+Percebe-se que, no método "GET /animais", está sendo obrigatório (*required) o uso do Pageable como argumento, quando na verdade não deveria ser...
+... E para esconder essa solicitação do Pageable podemos usar a Annotation "@Parameter" do pacote "io.swagger" no parâmetro do endpoint em questão
+
+Ex: 
+	
+	@GetMapping
+	public ResponseEntity<Page<Animal>> list(@Parameter(hidden = true)Pageable pegeable) {
+		return ResponseEntity.ok(animalService.listAll(pegeable));
+	}
+
+
+Assim como o método "GET /animais/by-id/{id}" está também pedindo argumentos que não deveriam ser solicitados...
+... E pensando nisso, existem mais outras duas dependências no Spring que nos ajudarão a solucionar esse problema 
+- Spring Data Rest support 
+- Spring security support (ajudará a ignorar o @AuthenticationPrincipal) do pacote "org.springdoc.api"
+
+
+No método "GET /animais" iremos substituir o "@Parameter(hideen - true)" para "@ParameterObject", pois assim poderemos aplicar argumentos da requisição, como "page", "size" e "sort" 
+
+E lembrando que temos um contrato para seguir ao requerir os endpoints, como utilizar os mesmos nomes das váriaveis enviadas ao salvar/atualizar um objeto...
+... E é por isso que existe o versionamento de API's
+

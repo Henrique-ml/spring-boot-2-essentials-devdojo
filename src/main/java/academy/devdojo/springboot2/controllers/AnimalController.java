@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class AnimalController {
 	private final AnimalService animalService;
 
 	@GetMapping
-	public ResponseEntity<Page<Animal>> list(Pageable pegeable) {
+	public ResponseEntity<Page<Animal>> list(@ParameterObject Pageable pegeable) {
 		return ResponseEntity.ok(animalService.listAll(pegeable));
 	}
 

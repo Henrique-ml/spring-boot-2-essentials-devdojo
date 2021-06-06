@@ -9,16 +9,35 @@
 		<version>2.4.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>academy.devdojo</groupId>
 	<artifactId>springboot2-essentials</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springboot2-essentials</name>
 	<description>Learning Spring Boot with DevDojo</description>
+
 	<properties>
 		<java.version>11</java.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+		<springdoc-openapi-ui.version>1.5.9</springdoc-openapi-ui.version>
 	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${springdoc-openapi-ui.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-data-rest</artifactId>
+			<version>${springdoc-openapi-ui.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-security</artifactId>
+			<version>${springdoc-openapi-ui.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -76,6 +95,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<profiles>
 		<profile>
 			<id>integration-tests</id>
@@ -114,7 +134,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+				<version>${maven-compiler-plugin.version}</version><!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<source>11</source>
 					<target>11</target>
