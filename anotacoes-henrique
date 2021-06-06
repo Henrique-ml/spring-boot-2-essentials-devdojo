@@ -1335,3 +1335,53 @@ No método "GET /animais" iremos substituir o "@Parameter(hideen - true)" para "
 E lembrando que temos um contrato para seguir ao requerir os endpoints, como utilizar os mesmos nomes das váriaveis enviadas ao salvar/atualizar um objeto...
 ... E é por isso que existe o versionamento de API's
 
+// --- 47 --- // 
+
+O ponto principal sobre a Documentação é fazê-la o mais auto-explicativo possível, pois, dessa forma, mais fácil para as pessoas fazerem parte do 'unboarding'...
+... que é aquele início que se tem em toda a empresa
+
+E, nessa aula, iremos fornecer algumas informações a mais sobre os endpoints na interface do Swagger
+
+Vamos para o Schema, no qual está sendo recebido na requisição, e no nosso caso fica no pasta de "requests" do projeto 
+
+Nos atributos das classes "AnimalPostRequestBody" e "AnimalPutRequestBody", cujas são classes para receber um objeto, cada uma, e salvar/atualizá-lo no banco de dados,...
+... incluiremos as informações adicionais necessárias para salvamento/atualização do objeto na Annotation "@Schema" seguida de alguns argumentos (a seu critério)
+
+Ex:
+	
+	@Schema(description = "This is the Animal's name", example = "Pug", required = true)
+	private String name;
+
+- agora, tais informações adicionais, irão aparecer na interface do Swagger detalhando assim o funcionamento dos endpoints já deixando-os auto-explicativo
+
+
+
+E, ainda sobre a adição de informações para o uso da API, podemos descrever também os métodos na classe de Controller:
+
+Ex:
+
+	@GetMapping
+	@Operation(
+			summary = "List all animais paginated", 
+			description = "The default size is 20, use the parameter 'size' to change the default value",
+			tags = {"animal"})
+	public ResponseEntity<Page<Animal>> list(@ParameterObject Pageable pegeable) {
+		return ResponseEntity.ok(animalService.listAll(pegeable));
+	}
+	
+	...
+	
+	@DeleteMapping(path = "/admin/{id}")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Successful Operation"),
+			@ApiResponse(responseCode = "400", description = "When Animal Does Not Exist In The Database")
+	})
+	public ResponseEntity<Void> delete(@PathVariable long id) {
+		animalService.delete(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+- tags: o agrupamento de endpoints na interface do Swagger
+
+BÔNUS: passando o caminho "/v3/api-docs" o Spring já cria uma especificação JSON para você, e que através dela, outras pessoas podem gerar um código em suas IDE's, por exemplo
+

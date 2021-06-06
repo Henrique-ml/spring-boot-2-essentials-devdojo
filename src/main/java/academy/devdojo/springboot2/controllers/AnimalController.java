@@ -25,6 +25,9 @@ import academy.devdojo.springboot2.entities.Animal;
 import academy.devdojo.springboot2.requests.AnimalPostRequestBody;
 import academy.devdojo.springboot2.requests.AnimalPutRequestBody;
 import academy.devdojo.springboot2.services.AnimalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,6 +38,10 @@ public class AnimalController {
 	private final AnimalService animalService;
 
 	@GetMapping
+	@Operation(
+			summary = "List all animais paginated", 
+			description = "The default size is 20, use the parameter 'size' to change the default value",
+			tags = {"animal"})
 	public ResponseEntity<Page<Animal>> list(@ParameterObject Pageable pegeable) {
 		return ResponseEntity.ok(animalService.listAll(pegeable));
 	}
@@ -50,10 +57,10 @@ public class AnimalController {
 	}
 
 	@GetMapping(path = "by-id/{id}")
-    public ResponseEntity<Animal> findByIdAuthenticationPrincipal(@PathVariable long id, 
-    																@AuthenticationPrincipal UserDetails userDetails) {
-    	return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));
-    }
+	public ResponseEntity<Animal> findByIdAuthenticationPrincipal(@PathVariable long id,
+			@AuthenticationPrincipal UserDetails userDetails) {
+		return ResponseEntity.ok(animalService.findByIdOrThrowBadRequestException(id));
+	}
 
 	@GetMapping(path = "/find")
 	public ResponseEntity<List<Animal>> findByName(@RequestParam String name) {
@@ -66,6 +73,10 @@ public class AnimalController {
 	}
 
 	@DeleteMapping(path = "/admin/{id}")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Successful Operation"),
+			@ApiResponse(responseCode = "400", description = "When Animal Does Not Exist In The Database")
+	})
 	public ResponseEntity<Void> delete(@PathVariable long id) {
 		animalService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
