@@ -1385,3 +1385,151 @@ Ex:
 
 BÔNUS: passando o caminho "/v3/api-docs" o Spring já cria uma especificação JSON para você, e que através dela, outras pessoas podem gerar um código em suas IDE's, por exemplo
 
+// --- 48 --- //
+
+Métricas da API
+
+Aula extremamente importante quando está se trabalhando com Microservices
+
+O Spring Boot te possibilita a criação de Microserviços 
+
+Existem pessoas/empresas que utilizam o Spring Boot como se fosse um sistema monolítico Java EE...
+... mas no final das contas a ideia do Spring Boot é criar serviços pequenos - serviços que são facilmente mantidos por no máximo 3-4 pessoas incluindo o testers, front-end e etc
+
+Aplicação monolítica
+- Em engenharia de software, uma aplicação monolítica descreve uma única aplicação de software em camadas...
+...no qual a interface de usuário e código de acesso aos dados são combinados em um único programa a partir de uma única plataforma.
+
+
+
+Quando se trabalha com Microsserviços a chance de você fazer o Deploy dessa aplicação em um ambiente Cloud - AWS, Azure, etc - é muito grande...
+... e quando se faz o deploy nesses ambientes você quer q1ue a sua aplicação te diga o estado em que ela se encontra.
+
+Quando se tem um ambiente Cloud, você pode escalar sua aplicação, e para escalar sua aplicação você precisa de métricas, por exemplo, qual o estado da minha CPU? qual o estado de memória já usado?...
+... e quando temos essas métricas se pode simplesmente requisitar, para o sistema Cloud que está gerenciando, para, por exemplo, subir mais um, dois, três serviços a sua escolha...
+... principalmente se você estiver utilizando o Docker EE e o Kubernetes.
+E no final das contas precisa dessas métricas e o Spring facilita bastante nossa vida 
+
+Escalabilidade
+- Um sistema escalável de dados é aquele que tem a capacidade de continuar a funcionar bem quando seu contexto é alterado em tamanho ou volume para atender à necessidade de um usuário. 
+Escalabilidade é também a habilidade de não só funcionar bem em situações redimensionadas, mas também de tirar proveito delas.
+
+
+##  https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html  ##
+
+Adicionando a dependência:
+
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    
+E ao adicioná-la já teremos algumas métricas
+
+Ex:
+
+	http://localhost:8080/actuator/health
+
+- sempre usar antes o caminho "/actuator" para acessar todos os endpoints do Actuator
+- ao iniciar a aplicação, o status da aplicação será "UP"
+
+
+
+
+Ex:
+
+	http://localhost:8080/actuator/info
+
+- não terá nada pois precisamos preenchê-lo nas configurações da aplicação (que no nosso caso está na pasta "resources" do caminho "src/main/resources" no file "application.yml"
+
+
+
+
+Então vamos configurar o Actuator no file "application.yml":
+
+Ex:
+
+	management:
+	  endpoints:
+	    web:
+	      exposure:
+	        include: "*"
+	
+- serão incluidos todos os endpoints do Actuator da parte de Web
+
+
+
+
+//	Obs: os endpoints do Actuator estão disponíveis no site acima informado.
+
+
+
+
+Para ver, por exemplo, as métricas da aplicação, utilizamos o caminho "../metrics"
+
+Ex:
+
+	http://localhost:8080/actuator/metrics
+
+- lista todas as métricas da aplicação
+
+
+
+
+E para verificar alguma métrica listada, usamos o nome dela como caminho:
+
+Ex:
+
+	http://localhost:8080/actuator/metrics/process.cpu.usage
+
+- mostra a porcentagem de uso da CPU pela aplicação
+
+
+
+
+Assim como podemos também acrescentar informações sobre nossa aplicação/API no file "application.yml" acessada pelo caminho "../info"
+
+Arquivo "application.yml":
+
+Ex: 
+	
+	info:
+	  app: Spring Boot 2 Essentials by DevDojo
+	  website: https://devdojo.academy
+	  github: https://github.com/devdojobr/springboot2-essentials
+	
+Ex:
+
+	http://localhost:8080/actuator/info
+
+	
+
+Para liberar acesso do Actuator a todos, não precisando estar autenticado, vamos a classe "SecurityConfig" e criamos mais um matcher para acesso do Actuator:
+
+Ex:
+	
+	...
+	.antMatchers("/animais/actuator/**").permitAll()
+	...
+	
+- lembrando que geralmente não é simplesmente assim quando se está em produção, mas só exibindo que podemos habilitar
+
+
+
+E caso você queira expor apenas alguns endpoints, incluimos apenas alguns nas configurações "application.yml"
+
+Ex:
+
+	management:
+	  endpoints:
+	    web:
+	      exposure:
+	        include: info, health, metrics
+
+
+
+
+
+Lembrando que para quem está tentando aplicar o Actuator na versão 1.X do Spring.
+Não existe /actuator na versão 1.X e sim somente /info e etc... ex: "localhost:8080/info"
+
